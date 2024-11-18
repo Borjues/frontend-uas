@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="../style/profilestyle.css" />
+  </head>
+  <body>
+    <div class="profile-header">
+      <a id="backButton" class="back-button">← Back</a>
+      <img
+        src="../image/swain.jpeg"
+        alt="Profile Picture"
+        class="profile-image"
+      />
+      <div class="profile-info">
+        <h1>admin</h1>
+      </div>
+      <div class="profile-tabs">
+        <a id="createoutfit" class="active" role="button">Create</a>
+        <a id="outfits" class="passive" role="button">Your Outfits</a>
+      </div>
+    </div>
+
+    <div class="create-outfit">
+      <h2>Create Outfit</h2>
+      <form id="outfitForm">
+        <input type="text" id="outfitName" placeholder="Outfit Name" />
+        <textarea id="outfitDescription" placeholder="Description"></textarea>
+        <input type="url" id="outfitImage" placeholder="Image URL" required />
+        <button type="submit">Add Outfit</button>
+      </form>
+    </div>
+
+    <div class="your-outfits" style="display: none">
+      <div id="createdContent"></div>
+    </div>
+
+    <script src="../script/profile.js"></script>
+  </body>
+</html>

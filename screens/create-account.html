@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/registerstyle.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <title>Create Account</title>
+  </head>
+  <body>
+    <div class="photo-login"></div>
+    <div class="create-account-container">
+      <h1 class="logo"><span class="orange">Outfit</span>ology</h1>
+      <form class="form">
+        <div class="input-group">
+          <input type="text" id="username" required placeholder=" " />
+          <label for="username">Name</label>
+        </div>
+        <div class="input-group">
+          <input type="email" id="email" required placeholder=" " />
+          <label for="email">Email</label>
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" required placeholder=" " />
+          <label for="password">Password</label>
+        </div>
+        <button class="register-button" type="submit">Register</button>
+      </form>
+      <div class="checkbox">
+        <input type="checkbox" id="subscribe" />
+        <label for="subscribe">Subscribe to us for tips and updates*</label>
+      </div>
+      <div class="login">Already have an account? <a href="login.html">Login</a></div>
+    </div>
+  </body>
+  <script src="../script/register.js"></script>
+</html>
