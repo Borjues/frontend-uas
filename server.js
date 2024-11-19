@@ -56,6 +56,20 @@ app.post('/register', async (req, res) => {
   }
 });
 
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await User.findOne({ username, password });
+    if (user) {
+      res.status(200).send({ message: 'Login successful' });
+    } else {
+      res.status(401).send({ message: 'Invalid credentials' });
+    }
+  } catch (error) {
+    res.status(500).send({ message: 'Server error', error });
+  }
+});
+
 // Jalankan server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
