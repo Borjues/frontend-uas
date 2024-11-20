@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="outfitologyApp">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,35 +17,33 @@
         <span class="bold"><span class="orange">Outfit</span>ology</span>
       </div>
       <div class="nav">
-        <a href="homepage.html">Home </a>
-        <a href="explore.html">Explore</a>
+        <a href="#!/">Home </a>
+        <a href="#!/explore">Explore</a>
       </div>
       <div class="profile">
-        <a href="../screens/profile.html"><i class="bx bxs-user-circle"></i></a>
+        <a href="#!/profile"><i class="bx bxs-user-circle"></i></a>
       </div>
       <button class="hamburger">
         <div class="bar"></div>
       </button>
     </div>
     <nav class="mobile-nav">
-      <a href="index.html">Home</a>
-      <a href="explore.html">Explore</a>
-      <a href="profile.html">Profile</a>
+      <a href="#!/">Home</a>
+      <a href="#!/explore">Explore</a>
+      <a href="#!/profile">Profile</a>
     </nav>
 
     <!-- Slider -->
     <div class="slider">
-      <div class="slides">
+      <div class="slides" ng-style="{'transform': slideTransform}">
         <div class="slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1708633003273-bed7672ddd81?q=80&w=1821&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
         <div class="slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1683817138481-dcdf64a40859?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
         <div class="slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1708110920881-635419c3411f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
       </div>
-      <div class="arrow left-arrow" onclick="prevSlide()">&#10094;</div>
-      <div class="arrow right-arrow" onclick="nextSlide()">&#10095;</div>
+      <div class="arrow left-arrow" ng-click="prevSlide()">&#10094;</div>
+      <div class="arrow right-arrow" ng-click="nextSlide()">&#10095;</div>
       <div class="dots">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
+        <span class="dot" ng-repeat="slide in slides" ng-click="setCurrentSlide($index)" ng-class="{'active': isActive($index)}"> </span>
       </div>
     </div>
 
@@ -164,6 +162,6 @@
       <div id="caption" class="caption"></div>
     </div>
 
-    <script src="../script/script.js"></script>
+    <script src="js/controllers/homeController.js"></script>
   </body>
 </html>

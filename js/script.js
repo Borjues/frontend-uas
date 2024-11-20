@@ -71,11 +71,9 @@ menu_btn.addEventListener("click", function () {
   mobile_menu.classList.toggle("is-active");
 });
 
-
 const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("modalImage");
 const captionText = document.getElementById("caption");
-
 
 function openModal(imageSrc, description) {
   modal.style.display = "block";
@@ -90,7 +88,7 @@ function closeModal() {
 const images = document.querySelectorAll("#recently-posted img");
 images.forEach((img) => {
   img.addEventListener("click", function () {
-    const description = img.alt; 
+    const description = img.alt;
     openModal(img.src, description);
   });
 });

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html ng-app="outfitologyApp">
+  <head>
+    <title>Outfitology</title>
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="style/style.css" />
+  </head>
+  <body>
+    <div ng-view></div>
+
+    <!-- Angular App -->
+    <script src="js/app.js"></script>
+    <!-- Controllers -->
+    <script src="js/controllers/loginController.js"></script>
+    <script src="js/controllers/registerController.js"></script>
+    <script src="js/controllers/homeController.js"></script>
+    <script src="js/controllers/profileController.js"></script>
+    <!-- Services -->
+    <script src="js/services/authService.js"></script>
+  </body>
+</html>
