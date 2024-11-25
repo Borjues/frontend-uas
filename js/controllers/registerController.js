@@ -1,17 +1,22 @@
 angular.module("outfitologyApp").controller("RegisterController", [
   "$scope",
   "AuthService",
-  function ($scope, AuthService) {
-    $scope.formData = {
-      username: "",
+  "$location",
+  function ($scope, AuthService, $location) {
+    var vm = this;
+
+    vm.user = {
+      name: "",
       email: "",
       password: "",
     };
 
-    $scope.register = function () {
-      AuthService.register($scope.formData.username, $scope.formData.email, $scope.formData.password)
+    vm.submitForm = function () {
+      AuthService.register(vm.user.name, vm.user.email, vm.user.password)
         .then(function (response) {
-          swal("Success!", response.data.message, "success");
+          swal("Success!", response.data.message, "success").then(function () {
+            $location.path("/login");
+          });
         })
         .catch(function (error) {
           swal("Error!", error.data.message || "An unknown error occurred", "error");

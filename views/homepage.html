@@ -1,167 +1,27 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="outfitologyApp">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Outfitology</title>
-    <link rel="stylesheet" href="../style/style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet" />
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  </head>
-  <body>
-    <!-- Logo dan Navigation Bar -->
-    <div class="navbar">
-      <div class="logo">
-        <span class="bold"><span class="orange">Outfit</span>ology</span>
-      </div>
-      <div class="nav">
-        <a href="#!/">Home </a>
-        <a href="#!/explore">Explore</a>
-      </div>
-      <div class="profile">
-        <a href="#!/profile"><i class="bx bxs-user-circle"></i></a>
-      </div>
-      <button class="hamburger">
-        <div class="bar"></div>
-      </button>
-    </div>
-    <nav class="mobile-nav">
-      <a href="#!/">Home</a>
-      <a href="#!/explore">Explore</a>
-      <a href="#!/profile">Profile</a>
-    </nav>
+<div class="slider">
+  <div class="slides" ng-style="{'transform': 'translateX(-' + home.currentSlide * 100 + '%)'}">
+    <div class="slide" ng-repeat="slide in home.slides" ng-style="{'background-image': 'url(' + slide.url + ')'}"></div>
+  </div>
 
-    <!-- Slider -->
-    <div class="slider">
-      <div class="slides" ng-style="{'transform': slideTransform}">
-        <div class="slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1708633003273-bed7672ddd81?q=80&w=1821&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
-        <div class="slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1683817138481-dcdf64a40859?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
-        <div class="slide" style="background-image: url('https://plus.unsplash.com/premium_photo-1708110920881-635419c3411f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"></div>
-      </div>
-      <div class="arrow left-arrow" ng-click="prevSlide()">&#10094;</div>
-      <div class="arrow right-arrow" ng-click="nextSlide()">&#10095;</div>
-      <div class="dots">
-        <span class="dot" ng-repeat="slide in slides" ng-click="setCurrentSlide($index)" ng-class="{'active': isActive($index)}"> </span>
-      </div>
-    </div>
+  <div class="arrow left-arrow" ng-click="home.prevSlide()">❮</div>
+  <div class="arrow right-arrow" ng-click="home.nextSlide()">❯</div>
 
-    <!-- recent post -->
-    <div class="recently-posted">
-      <h2>Outfit Of The Day</h2>
-    </div>
-    <div class="recently-posted">
-      <div class="image-grid" id="recently-posted">
-        <img src="https://i.pinimg.com/564x/91/d0/5b/91d05b7d4562c30c4026d3cbeadcb0b3.jpg" alt="Post 1" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/49/64/79/496479a5fdb733d1d7f119bd8cf3c41d.jpg" alt="Post 2" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/3f/3f/ce/3f3fcebede07d307dbf6bfe6215e2e68.jpg" alt="Post 3" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/c3/ed/10/c3ed101126a804d5a87f913c38a14fc7.jpg" alt="Post 4" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/e0/06/c7/e006c7ef8cec205365c1ac1474c41650.jpg" alt="Post 5" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/1a/34/2c/1a342cca26813a95c045d3033809c45a.jpg" alt="Post 6" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/7d/e4/83/7de48324191093bdb255cc82894be573.jpg" alt="Post 7" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/cb/88/3c/cb883cf69bbd510ed7fd88a20c5afd88.jpg" alt="Post 8" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/98/85/52/988552343d5bd29815a9922ba3b62776.jpg" alt="Post 9" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/1c/c7/20/1cc7209d348de1af5fcf9e87639b354f.jpg" alt="Post 10" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/f0/82/e5/f082e519e219da674e3f32917e7b4a8b.jpg" alt="Post 11" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/33/a4/99/33a49976100ea7ebe44e3d896f670e71.jpg" alt="Post 12" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/89/b5/70/89b570d0a68d191be79161f0de275457.jpg" alt="Post 13" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/90/16/c8/9016c8fa2c539549cb1dab7c064d7d88.jpg" alt="Post 14" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/67/70/a1/6770a109fedd64926530f5292918f272.jpg" alt="Post 15" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/c0/4d/af/c04daf38e2bf8da7546bdb2171e29ff4.jpg" alt="Post 16" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/ba/1f/f6/ba1ff6bc06b588779d769d29737942a0.jpg" alt="Post 17" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/d9/f6/ad/d9f6adac8d99917922f441112d707896.jpg" alt="Post 18" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/e9/a8/e6/e9a8e6d23ea440f11b64853c536864a1.jpg" alt="Post 19" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/ae/18/64/ae186475b0796998ec31d197f3550ded.jpg" alt="Post 20" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/23/c2/6a/23c26a2f02c67e89e9c820479ed24720.jpg" alt="Post 21" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/99/f5/38/99f538c02433fd10f5df2584336e4b5c.jpg" alt="Post 22" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/ce/d5/47/ced54785eb44903a807bf213e95669dd.jpg" alt="Post 23" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/a2/0e/09/a20e09fb6fc5b311e361d2ef2638ea79.jpg" alt="Post 24" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/ac/87/13/ac87137aeabfd7aa3ac284bccd1c8f46.jpg" alt="Post 25" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/2e/c7/34/2ec73481d112644ed2159bbafa0e3e44.jpg" alt="Post 26" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/84/b3/9e/84b39eefe921f9d1776df48298c58a22.jpg" alt="Post 27" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/8f/78/8e/8f788e62bfb125c69f834785f259bf67.jpg" alt="Post 28" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/86/8b/72/868b72a6673e977fed47724b203ec665.jpg" alt="Post 29" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/cb/56/c3/cb56c3189e5484f570c204165ef8ed22.jpg" alt="Post 30" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/5d/49/cd/5d49cd9af8720e82eae43c6116ca9238.jpg" alt="Post 31" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/ba/1f/f6/ba1ff6bc06b588779d769d29737942a0.jpg" alt="Post 32" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/d5/89/a3/d589a38957b1485dadaf39a112173a28.jpg" alt="Post 33" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/8d/cd/da/8dcddabc8576e86bcc96557d8c5ef1e9.jpg" alt="Post 34" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/9a/e9/44/9ae94433b826f4688f27217c60c497a7.jpg" alt="Post 35" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/e6/bc/04/e6bc04fe25e6e4e147caa19292fd9787.jpg" alt="Post 36" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/ab/c8/94/abc89465bf3173f7c8f29aefe23de69c.jpg" alt="Post 37" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/2b/bf/99/2bbf993a5cd9d0cd9bf97c3867b6fa83.jpg" alt="Post 38" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/a5/8e/3c/a58e3c964c11c99a77c98d59042f4cc2.jpg" alt="Post 39" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/08/81/22/0881224103b7fd3efb66c9acb6f09fb2.jpg" alt="Post 40" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/19/8c/2c/198c2c762665c3f9acc10d9cfe48c275.jpg" alt="Post 41" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/e1/f2/6e/e1f26e21343fa61cfd360bf0d10c17ef.jpg" alt="Post 42" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/8a/7d/ac/8a7dacafac08b3c8ac4f052b8831008b.jpg" alt="Post 43" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/7c/1d/17/7c1d171dc90cc28742db33d017f991f0.jpg" alt="Post 44" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/6c/89/a1/6c89a1ec332502c20e8f9990d6ecf445.jpg" alt="Post 45" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/bc/ed/b0/bcedb0c892c5fe1df8e570d894419fc6.jpg" alt="Post 46" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/a9/c0/76/a9c076fa7c158ca2d616e8e35357986c.jpg" alt="Post 47" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/28/20/91/282091995544288f3d28ec67c0daa5a3.jpg" alt="Post 48" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/f2/eb/05/f2eb059e1e7e9748f947feb08df96182.jpg" alt="Post 49" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/3f/af/3d/3faf3dc18d2371e708419f59a6edea38.jpg" alt="Post 50" loading="lazy" />
-        <img src="https://i.pinimg.com/originals/ec/6e/51/ec6e51da73840bbf3bcba4c95730a15a.gif" alt="Post 51" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/95/8b/47/958b4773a154478aa74f8abb8f2d6224.jpg" alt="Post 52" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/6d/a9/47/6da94790adf0f4ae09c0c0d347fe6194.jpg" alt="Post 53" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/fb/64/04/fb64040f047ae5e1f4783e378d4de78c.jpg" alt="Post 54" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/c4/80/79/c48079f1d2a6f63c2e2fa57cb63c8ab6.jpg" alt="Post 55" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/17/44/1c/17441cac5e8f0e07759e0a105712ac27.jpg" alt="Post 56" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/35/9f/cc/359fcce11642cf5438b98c1f28bba2f8.jpg" alt="Post 57" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/33/c5/b5/33c5b5b764c6159c16bf8b5afd342864.jpg" alt="Post 58" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/cb/11/4e/cb114e246ea1d322a7d64066aeb5d8ed.jpg" alt="Post 59" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/09/50/98/0950980910a1e18b0bdae0c487e841ec.jpg" alt="Post 60" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/46/2d/1b/462d1b2a61df391dc2f03ddb57c90da5.jpg" alt="Post 61" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/37/37/63/37376340a0e4c67b2bd604f1aab6238e.jpg" alt="Post 62" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/28/04/ad/2804ad62c71b8a0c8c4b949bcf8eb45c.jpg" alt="Post 63" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/52/e4/82/52e4826ec80659071c31f7830bd02956.jpg" alt="Post 64" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/5f/46/04/5f46045085838017b04aaf8480bdd7e0.jpg" alt="Post 65" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/a2/7c/8a/a27c8a921ca849a3f7d539f3ca080e85.jpg" alt="Post 66" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/60/b9/e6/60b9e606195cf82725b66e539a0c4822.jpg" alt="Post 67" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/3f/fb/d9/3ffbd9afa662861ef59552e0219b1369.jpg" alt="Post 68" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/6e/46/1e/6e461e503083fe519d30d1b9b71a57dd.jpg" alt="Post 69" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/5e/a5/02/5ea5028a30ccdf94f56307afde8ebd9f.jpg" alt="Post 70" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/dc/a7/c3/dca7c3231a05a5c0785c29ab312590f7.jpg" alt="Post 71" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/f4/52/71/f45271d4b6d5c0554a7337f65a977196.jpg" alt="Post 72" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/0d/52/ff/0d52ff8c01ca779707aa160a9cc6b02b.jpg" alt="Post 73" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/09/03/37/090337f0f6121e6dfc6cb48b47c87fbf.jpg" alt="Post 74" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/68/80/f7/6880f7b248fe7f52e7e3117073c5fcc8.jpg" alt="Post 75" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/3d/7b/86/3d7b86360c92e1a36f59542873b34ca9.jpg" alt="Post 76" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/9c/65/f0/9c65f05f66044ccd00b87761efb9f194.jpg" alt="Post 77" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/f8/39/7c/f8397cb600c083cc048edcbf9550e55a.jpg" alt="Post 78" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/59/db/6c/59db6cdada7734d9b1635bf47bf5abbc.jpg" alt="Post 79" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/66/be/09/66be091917c79e372287925f29532ff7.jpg" alt="Post 80" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/93/fa/7d/93fa7d26591897fed9ec77b4ab0bc107.jpg" alt="Post 81" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/93/c6/59/93c6595b39aecdfc48137247aa059813.jpg" alt="Post 82" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/59/af/ee/59afeea97b50dd6d65d1a1a90ae5a849.jpg" alt="Post 83" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/e5/41/fa/e541fa07fe4a818521e71ea5d0d310f5.jpg" alt="Post 84" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/ca/9d/49/ca9d49ec385759e3797386a2085c922a.jpg" alt="Post 85" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/0f/1b/fd/0f1bfd0eb86e5dd19f5977269a7e756f.jpg" alt="Post 86" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/62/b1/45/62b1455efc62d92e51189f883a57ebd2.jpg" alt="Post 87" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/fb/e0/5b/fbe05b54bf20b0ca4ee8cc226c23e8f9.jpg" alt="Post 88" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/c5/f4/07/c5f407817c74a1f56319259a5addeb4c.jpg" alt="Post 89" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/26/dc/9d/26dc9d91eabb0c62e6745987630fe86c.jpg" alt="Post 90" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/85/a2/ed/85a2ed4779cd3c2fbca5db96ef940bb3.jpg" alt="Post 91" loading="lazy" />
-        <img src="https://i.pinimg.com/564x/02/a8/4a/02a84a66857071402f6f4152e905e6f5.jpg" alt="Post 92" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/e9/24/bb/e924bbc5179d48d57cecdd7eac5a8b2b.jpg" alt="Post 93" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/74/27/51/742751af3349d47b5f52d3fbf5a74c8d.jpg" alt="Post 94" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/10/0d/24/100d2498e1bfbd61c0a48d92c4ed4470.jpg" alt="Post 95" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/59/c0/60/59c060c59d75516627c5222da51b2011.jpg" alt="Post 96" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/cf/d7/58/cfd75815c8b6ca0c9d87fc9985e846a6.jpg" alt="Post 97" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/81/9d/48/819d4839a78a1cdc0a276c017f7b5fd5.jpg" alt="Post 98" loading="lazy" />
-        <img src="https://i.pinimg.com/736x/0f/67/e9/0f67e970c0e68ae419367812ab75b329.jpg" alt="Post 99" loading="lazy" />
-        <img src="https://i.pinimg.com/enabled_hi/564x/0b/d5/af/0bd5afd7316c00747e91a9f4d3e9645b.jpg" alt="Post 100" loading="lazy" />
-      </div>
-    </div>
+  <div class="dots">
+    <span class="dot" ng-repeat="slide in home.slides" ng-click="home.setCurrentSlide($index)" ng-class="{'active': home.isActive($index)}"> </span>
+  </div>
+</div>
 
-    <div id="imageModal" class="modal">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <img class="modal-content" id="modalImage" />
-      <div id="caption" class="caption"></div>
-    </div>
+<div class="recently-posted">
+  <h2>Outfit Of The Day</h2>
+</div>
 
-    <script src="js/controllers/homeController.js"></script>
-  </body>
-</html>
+<div class="recently-posted">
+  <div id="recently-posted" class="image-grid">
+    <img ng-repeat="outfit in home.outfits" ng-src="{{outfit.url}}" alt="{{outfit.alt}}" loading="lazy" ng-click="home.openModal(outfit)" />
+  </div>
+</div>
+
+<div id="imageModal" class="modal" ng-show="home.modalOpen">
+  <span class="close" ng-click="home.closeModal()">x</span>
+  <div id="caption" class="caption">{{home.selectedOutfit.caption}}</div>
+</div>

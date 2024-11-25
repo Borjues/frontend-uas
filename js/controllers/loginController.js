@@ -3,17 +3,19 @@ angular.module("outfitologyApp").controller("LoginController", [
   "AuthService",
   "$location",
   function ($scope, AuthService, $location) {
-    $scope.formData = {
+    var vm = this;
+
+    vm.user = {
       username: "",
       password: "",
     };
 
-    $scope.login = function () {
-      if ($scope.formData.username && $scope.formData.password) {
-        AuthService.login($scope.formData.username, $scope.formData.password)
+    vm.submitForm = function () {
+      if (vm.user.username && vm.user.password) {
+        AuthService.login(vm.user.username, vm.user.password)
           .then(function (response) {
             swal("Success!", "Login successful.", "success").then(function () {
-              $location.path("/homepage");
+              $location.path("/");
               $scope.$apply();
             });
           })

@@ -1,45 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile Page</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
-    />
-    <link rel="stylesheet" href="../style/profilestyle.css" />
-  </head>
-  <body>
-    <div class="profile-header">
-      <a id="backButton" class="back-button">← Back</a>
-      <img
-        src="../image/swain.jpeg"
-        alt="Profile Picture"
-        class="profile-image"
-      />
-      <div class="profile-info">
-        <h1>admin</h1>
-      </div>
-      <div class="profile-tabs">
-        <a id="createoutfit" class="active" role="button">Create</a>
-        <a id="outfits" class="passive" role="button">Your Outfits</a>
-      </div>
-    </div>
+<div class="profile-header">
+  <a href="#!/" class="back-button" id="backButton">← Back</a>
 
-    <div class="create-outfit">
-      <h2>Create Outfit</h2>
-      <form id="outfitForm">
-        <input type="text" id="outfitName" placeholder="Outfit Name" />
-        <textarea id="outfitDescription" placeholder="Description"></textarea>
-        <input type="url" id="outfitImage" placeholder="Image URL" required />
-        <button type="submit">Add Outfit</button>
-      </form>
-    </div>
+  <img ng-src="{{profile.user.profileImage}}" class="profile-image" alt="Profile Picture" />
 
-    <div class="your-outfits" style="display: none">
-      <div id="createdContent"></div>
-    </div>
+  <div class="profile-info">
+    <h1>{{profile.user.username}}</h1>
+  </div>
 
-    <script src="../script/profile.js"></script>
-  </body>
-</html>
+  <div class="profile-tabs">
+    <button id="createoutfit" role="button" ng-class="{'active': profile.activeTab === 'create', 'passive': profile.activeTab !== 'create'}" ng-click="profile.setTab('create')">Create</button>
+    <button id="outfits" role="button" ng-class="{'active': profile.activeTab === 'outfits', 'passive': profile.activeTab !== 'outfits'}" ng-click="profile.setTab('outfits')">Your Outfits</button>
+  </div>
+</div>
+
+<div class="create-outfit" ng-show="profile.activeTab === 'create'">
+  <h2>Create Outfit</h2>
+  <button ng-click="profile.addOutfit()">Add Outfit</button>
+</div>
+
+<div class="your-outfits" ng-show="profile.activeTab === 'outfits'">
+  <div id="createdContent">
+    <div class="outfit-card" ng-repeat="outfit in profile.userOutfits">
+      <!-- Content for each outfit -->
+    </div>
+  </div>
+</div>

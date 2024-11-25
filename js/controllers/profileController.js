@@ -1,49 +1,33 @@
 angular.module("outfitologyApp").controller("ProfileController", [
   "$scope",
   "$location",
-  function ($scope, $location) {
-    $scope.activeTab = "create";
-    $scope.createdOutfits = [];
+  "AuthService",
+  function ($scope, $location, AuthService) {
+    var vm = this;
 
-    $scope.goBack = function () {
-      $location.path("/homepage");
+    vm.activeTab = "create";
+    vm.user = {
+      username: "admin",
+      profileImage: "../image/swain.jpeg",
+    };
+    vm.userOutfits = [];
+
+    vm.setTab = function (tab) {
+      vm.activeTab = tab;
     };
 
-    $scope.setTab = function (tab) {
-      $scope.activeTab = tab;
+    vm.addOutfit = function () {
+      // Implementation for adding new outfit
+      var newOutfit = {
+        name: "New Outfit",
+        description: "Outfit description",
+        image: "outfit-image-url",
+      };
+      vm.userOutfits.push(newOutfit);
     };
 
-    $scope.outfitForm = {
-      name: "",
-      description: "",
-      image: "",
-    };
-
-    $scope.submitOutfit = function () {
-      if ($scope.outfitForm.name && $scope.outfitForm.image) {
-        $scope.createdOutfits.push({
-          name: $scope.outfitForm.name,
-          description: $scope.outfitForm.description,
-          image: $scope.outfitForm.image,
-        });
-
-        // Reset form
-        $scope.outfitForm = {
-          name: "",
-          description: "",
-          image: "",
-        };
-      }
-    };
-
-    $scope.showPopup = function (outfit) {
-      $scope.selectedOutfit = outfit;
-      $scope.showOutfitModal = true;
-    };
-
-    $scope.closePopup = function () {
-      $scope.showOutfitModal = false;
-      $scope.selectedOutfit = null;
+    vm.goBack = function () {
+      $location.path("/");
     };
   },
 ]);
