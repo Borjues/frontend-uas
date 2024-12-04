@@ -44,16 +44,20 @@ angular.module("outfitologyApp").factory("UnsplashService", [
   "$http",
   function ($http) {
     const UNSPLASH_ACCESS_KEY = "u5l1RpWY84DwihSsWs0KfKWfpW866WDXWkIPX19CMKA";
-    const SEARCH_QUERY = "fashion, streetwear, outfit, casual outfit";
+    const DEFAULT_SEARCH_QUERY = "fashion, streetwear, outfit, casual outfit";
 
     return {
-      fetchImages: function () {
+      fetchImages: function (userQuery) {
         return $http({
           method: "GET",
           url: `https://api.unsplash.com/photos/random`,
+          headers: {
+            SameSite: "None",
+            Secure: true,
+          },
           params: {
             count: 30,
-            query: SEARCH_QUERY,
+            query: `${userQuery}, fashion` || DEFAULT_SEARCH_QUERY,
             client_id: UNSPLASH_ACCESS_KEY,
           },
         });
@@ -241,13 +245,15 @@ angular
     "UnsplashService",
     "$window",
     "$document",
-    function ($scope, UnsplashService, $window, $document) {
+    "$rootScope",
+    function ($scope, UnsplashService, $window, $document, $rootScope) {
       var vm = this;
       vm.page = 1;
       vm.fetching = false;
-      vm.columns = [[], [], [], [], []]; // 5 columns
+      vm.columns = [[], [], [], [], []];
       vm.isLoading = true;
       vm.isMobileMenuActive = false;
+      vm.originalImages = [];
 
       vm.createCard = function (imageUrl, colIndex) {
         vm.columns[colIndex].push({
@@ -257,15 +263,21 @@ angular
         });
       };
 
-      vm.fetchImageData = function () {
+      vm.fetchImageData = function (searchQuery) {
         if (vm.fetching) return;
 
         vm.fetching = true;
         vm.isLoading = true;
 
-        UnsplashService.fetchImages()
+        UnsplashService.fetchImages(searchQuery)
           .then(function (response) {
             if (response.data.length > 0) {
+              vm.originalImages = vm.originalImages.concat(response.data);
+
+              if (vm.page === 1) {
+                vm.columns = [[], [], [], [], []];
+              }
+
               response.data.forEach(function (image, index) {
                 vm.createCard(image.urls.small, index % 5);
               });
@@ -280,9 +292,13 @@ angular
           });
       };
 
-      vm.toggleMobileMenu = function () {
-        vm.isMobileMenuActive = !vm.isMobileMenuActive;
-      };
+      // Listen for search updates from rootScope
+      $scope.$on("searchUpdated", function (event, searchQuery) {
+        vm.page = 1;
+        vm.columns = [[], [], [], [], []];
+        vm.originalImages = [];
+        vm.fetchImageData(searchQuery);
+      });
 
       // Handle infinite scroll
       angular.element($window).on("scroll", function () {
@@ -295,7 +311,7 @@ angular
         if (bodyHeight - scrollTop - windowHeight < 800) {
           vm.page++;
           $scope.$apply(function () {
-            vm.fetchImageData();
+            vm.fetchImageData($rootScope.searchQuery);
           });
         }
       });
@@ -306,6 +322,6 @@ angular
       });
 
       // Initial load
-      vm.fetchImageData();
+      vm.fetchImageData("");
     },
   ]);

@@ -27,7 +27,6 @@ angular
           controller: "ProfileController",
           controllerAs: "profile",
           resolve: {
-            // Contoh authentication check
             auth: [
               "$location",
               "AuthService",
@@ -53,30 +52,64 @@ angular
     "$rootScope",
     "$location",
     "AuthService",
-    function ($rootScope, $location, AuthService) {
+    "UnsplashService",
+    "$timeout",
+    function ($rootScope, $location, AuthService, UnsplashService, $timeout) {
+      // Initialize search-related properties
+      $rootScope.searchQuery = "";
+      $rootScope.currentPath = "";
+
+      $rootScope.isMenuActive = false;
+
+      // Fungsi toggle menu
+      $rootScope.toggleMenu = function () {
+        $rootScope.isMenuActive = !$rootScope.isMenuActive;
+      };
+
+      // Search handling function
+      var searchTimeout;
+      $rootScope.handleSearch = function () {
+        if ($rootScope.currentPath !== "/explore") return;
+
+        if (searchTimeout) {
+          $timeout.cancel(searchTimeout);
+        }
+
+        searchTimeout = $timeout(function () {
+          $rootScope.$broadcast("searchUpdated", $rootScope.searchQuery);
+        }, 1000);
+      };
+
+      // Clear search function
+      $rootScope.clearSearch = function () {
+        if ($rootScope.currentPath !== "/explore") return;
+
+        $rootScope.searchQuery = "";
+        $rootScope.$broadcast("searchUpdated", "");
+      };
+
       // Handle route change events
       $rootScope.$on("$routeChangeStart", function (event, next, current) {
-        // Update loading state
         $rootScope.isLoading = true;
-
-        // Example: Check if user is logged in
         $rootScope.isLoggedIn = AuthService.isLoggedIn();
       });
 
       $rootScope.$on("$routeChangeSuccess", function () {
-        // Hide loading when route change is complete
         $rootScope.isLoading = false;
-
-        // Scroll to top on route change
         window.scrollTo(0, 0);
 
-        // Dynamic CSS
+        $rootScope.isMenuActive = false;
+
+        // Update current path for search visibility
+        $rootScope.currentPath = $location.path();
+
+        // Dynamic CSS handling
         var viewStyleMap = {
           "/": "style/style.css",
           "/login": "style/loginstyle.css",
           "/register": "style/registerstyle.css",
           "/profile": "style/profilestyle.css",
-          "/explore": "style/style.css",
+          "/explore": "style/explorerstyle.css",
         };
 
         var stylePath = viewStyleMap[$location.path()] || "views/style.css";
@@ -84,9 +117,15 @@ angular
       });
 
       $rootScope.$on("$routeChangeError", function () {
-        // Handle route change errors
         $rootScope.isLoading = false;
         $location.path("/");
+      });
+
+      // Cleanup on root scope destroy
+      $rootScope.$on("$destroy", function () {
+        if (searchTimeout) {
+          $timeout.cancel(searchTimeout);
+        }
       });
     },
   ]);
