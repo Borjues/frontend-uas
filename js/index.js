@@ -77,9 +77,15 @@ angular
       vm.selectedOutfit = null;
 
       vm.slides = [
-        { url: "https://plus.unsplash.com/premium_photo-1708633003273-bed7672ddd81?q=80&w=1821&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { url: "https://plus.unsplash.com/premium_photo-1683817138481-dcdf64a40859?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-        { url: "https://plus.unsplash.com/premium_photo-1708110920881-635419c3411f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+        {
+          url: "https://plus.unsplash.com/premium_photo-1708633003273-bed7672ddd81?q=80&w=1821&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        },
+        {
+          url: "https://plus.unsplash.com/premium_photo-1683817138481-dcdf64a40859?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        },
+        {
+          url: "https://plus.unsplash.com/premium_photo-1708110920881-635419c3411f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        },
       ];
 
       // Load your outfit images here
@@ -95,7 +101,8 @@ angular
       };
 
       vm.prevSlide = function () {
-        vm.currentSlide = (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
+        vm.currentSlide =
+          (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
       };
 
       vm.setCurrentSlide = function (index) {
@@ -157,10 +164,12 @@ angular
               };
               storeUserSession(userSession);
 
-              swal("Success!", "Login successful.", "success").then(function () {
-                $location.path("/");
-                $scope.$apply();
-              });
+              swal("Success!", "Login successful.", "success").then(
+                function () {
+                  $location.path("/");
+                  $scope.$apply();
+                }
+              );
             })
             .catch(function (error) {
               swal("Oops!", "Wrong username or password.", "error");
@@ -189,12 +198,18 @@ angular
       vm.submitForm = function () {
         AuthService.register(vm.user.name, vm.user.email, vm.user.password)
           .then(function (response) {
-            swal("Success!", response.data.message, "success").then(function () {
-              $location.path("/login");
-            });
+            swal("Success!", response.data.message, "success").then(
+              function () {
+                $location.path("/login");
+              }
+            );
           })
           .catch(function (error) {
-            swal("Error!", error.data.message || "An unknown error occurred", "error");
+            swal(
+              "Error!",
+              error.data.message || "An unknown error occurred",
+              "error"
+            );
           });
       };
     },
@@ -209,10 +224,13 @@ angular
       var vm = this;
 
       vm.activeTab = "create";
+      var currentUser = JSON.parse(localStorage.getItem("user"));
+
       vm.user = {
-        username: "admin",
+        username: currentUser ? currentUser.username : "Guest",
         profileImage: "../image/swain.jpeg",
       };
+
       vm.userOutfits = [];
 
       vm.setTab = function (tab) {
@@ -288,7 +306,8 @@ angular
       angular.element($window).on("scroll", function () {
         if (vm.fetching) return;
 
-        var scrollTop = $window.pageYOffset || $document[0].documentElement.scrollTop;
+        var scrollTop =
+          $window.pageYOffset || $document[0].documentElement.scrollTop;
         var windowHeight = $window.innerHeight;
         var bodyHeight = $document[0].documentElement.scrollHeight;
 
