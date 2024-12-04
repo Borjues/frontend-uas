@@ -32,6 +32,14 @@
         <a href="#!/explore">Explore</a>
       </div>
 
+      <div class="search-container" ng-show="$root.currentPath === '/explore'">
+        <div class="search-box">
+          <div class="search-icon"></div>
+          <input type="text" ng-model="$root.searchQuery" ng-change="$root.handleSearch()" placeholder="Search images" class="search-input" />
+          <button ng-click="$root.clearSearch()" ng-show="$root.searchQuery" class="clear-button"></button>
+        </div>
+      </div>
+
       <div class="profile">
         <a href="#!/profile"><i class="bx bxs-user-circle"></i></a>
       </div>
@@ -41,11 +49,11 @@
         <a href="#!/register">Register</a>
       </div>
 
-      <button class="hamburger">
+      <button class="hamburger" ng-class="{'is-active': isMenuActive}" ng-click="toggleMenu()">
         <div class="bar"></div>
       </button>
     </nav>
-    <nav class="mobile-nav">
+    <nav class="mobile-nav" ng-class="{'is-active': isMenuActive}">
       <a href="#!/">Home</a>
       <a href="#!/explore">Explore</a>
       <a href="#!/profile">Profile</a>
