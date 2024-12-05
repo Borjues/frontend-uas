@@ -222,13 +222,15 @@ body {
 .clear-button {
   background-image: url("../icons/xmark-solid-grey.svg");
   background-position: center;
+  background-repeat: no-repeat;
   position: absolute;
-  right: 8px;
-  background: none;
+  width: 14px;
+  height: 14px;
+  right: 15px;
   border: none;
+  background-color: #fff;
   padding: 4px;
   cursor: pointer;
-  color: #666;
   font-size: 12px;
 }
 

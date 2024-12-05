@@ -195,6 +195,7 @@ angular
           .then(function (response) {
             swal("Success!", response.data.message, "success").then(function () {
               $location.path("/login");
+              $scope.$apply();
             });
           })
           .catch(function (error) {
