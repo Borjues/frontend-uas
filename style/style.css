@@ -8,7 +8,11 @@
 
 body {
   font-family: "Poppins", sans-serif;
-  background-color: #f8f9fa;
+  background-image: url("/image/Home.jpg");
+  background-size: cover; /* Ensures the image covers the entire area */
+  background-repeat: no-repeat; /* Prevents tiling */
+  background-attachment: fixed; /* Keeps the background fixed during scroll */
+  background-position: center; /* Centers the image */
   color: #333;
   line-height: 1.6;
 }
@@ -388,13 +392,28 @@ body {
   max-width: 700px;
 }
 
-.caption {
-  margin: auto;
-  display: block;
-  text-align: center;
-  color: #ccc;
-  padding: 10px 0;
-  height: 150px;
+.like-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  height: 10px;
+  border: brown;
+}
+
+.comments-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.comments-container {
+  max-height: 150px; /* Set a fixed height for the comments box */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  height: 2000px;
 }
 
 .close {

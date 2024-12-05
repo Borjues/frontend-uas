@@ -1,12 +1,27 @@
 const mongoose = require("mongoose");
 
 const outfitSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  image: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
-const Outfit = mongoose.model("Outfit", outfitSchema);
-
-module.exports = Outfit;
+module.exports = mongoose.model("Outfit", outfitSchema);

@@ -272,28 +272,103 @@ angular
 
   // Profile Controller
   .controller("ProfileController", [
-    "$scope",
     "$location",
     "$http",
     "AuthService",
-    function ($scope, $location, $http, AuthService) {
+    function ($location, $http, AuthService) {
       var vm = this;
 
       vm.activeTab = "created";
-      var currentUser = JSON.parse(localStorage.getItem("user"));
-
-      vm.user = {
-        username: currentUser ? currentUser.username : "Guest",
-        profileImage: "../image/swain.jpeg",
+      vm.userOutfits = [];
+      vm.isPopupVisible = false;
+      vm.newOutfit = {
+        name: "",
+        description: "",
+        image: "",
       };
 
+      // Function to fetch user data and outfits
+      vm.fetchUserData = function () {
+        const currentUsername = JSON.parse(
+          localStorage.getItem("user")
+        )?.username;
+        if (!currentUsername) return;
+
+        // Get user data
+        $http
+          .get(`http://localhost:4000/user/${currentUsername}`)
+          .then(function (response) {
+            vm.user = response.data;
+            return $http.get(
+              `http://localhost:4000/outfits/user/${vm.user._id}`
+            );
+          })
+          .then(function (response) {
+            vm.userOutfits = response.data;
+          })
+          .catch(function (error) {
+            console.error("Error:", error);
+            if (!AuthService.isLoggedIn()) {
+              $location.path("/login");
+            }
+          });
+      };
+
+      // Call fetchUserData when controller initializes
+      vm.fetchUserData();
+
       vm.openCreatePopup = function () {
+        if (!AuthService.isLoggedIn()) {
+          swal("Error!", "Please login first", "error");
+          $location.path("/login");
+          return;
+        }
         vm.isPopupVisible = true;
       };
 
       vm.closePopup = function () {
         vm.isPopupVisible = false;
         vm.newOutfit = { name: "", description: "", image: "" };
+      };
+
+      vm.submitOutfit = function () {
+        if (!AuthService.isLoggedIn()) {
+          swal("Error!", "Please login first", "error");
+          $location.path("/login");
+          return;
+        }
+
+        if (
+          !vm.newOutfit.name ||
+          !vm.newOutfit.description ||
+          !vm.newOutfit.image
+        ) {
+          swal("Error!", "Please fill all fields", "error");
+          return;
+        }
+
+        const outfitData = {
+          name: vm.newOutfit.name,
+          description: vm.newOutfit.description,
+          image: vm.newOutfit.image,
+          userId: vm.user._id,
+        };
+
+        $http
+          .post("http://localhost:4000/outfits", outfitData)
+          .then(function (response) {
+            swal("Success!", "Outfit created successfully", "success");
+            vm.closePopup();
+            vm.fetchUserData(); // Refresh semua data
+          })
+          .catch(function (error) {
+            console.error("Error creating outfit:", error);
+            swal(
+              "Error!",
+              error.data?.message || "Failed to create outfit",
+              "error"
+            );
+          });
       };
 
       vm.setTab = function (tab) {
