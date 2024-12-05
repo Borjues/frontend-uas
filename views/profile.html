@@ -1,27 +1,46 @@
 <div class="profile-header">
   <a href="#!/" class="back-button" id="backButton">← Back</a>
 
-  <img ng-src="{{profile.user.profileImage}}" class="profile-image" alt="Profile Picture" />
+  <img
+    ng-src="{{profile.user.profileImage}}"
+    class="profile-image"
+    alt="Profile Picture"
+  />
 
   <div class="profile-info">
     <h1>{{profile.user.username}}</h1>
   </div>
 
   <div class="profile-tabs">
-    <button id="createoutfit" role="button" ng-class="{'active': profile.activeTab === 'create', 'passive': profile.activeTab !== 'create'}" ng-click="profile.setTab('create')">Create</button>
-    <button id="outfits" role="button" ng-class="{'active': profile.activeTab === 'outfits', 'passive': profile.activeTab !== 'outfits'}" ng-click="profile.setTab('outfits')">Your Outfits</button>
+    <button
+      id="createdTab"
+      role="button"
+      ng-class="{'active': profile.activeTab === 'created'}"
+      ng-click="profile.setTab('created')"
+    >
+      Created
+    </button>
+    <button
+      id="savedTab"
+      role="button"
+      ng-class="{'active': profile.activeTab === 'saved'}"
+      ng-click="profile.setTab('saved')"
+    >
+      Saved
+    </button>
   </div>
-</div>
 
-<div class="create-outfit" ng-show="profile.activeTab === 'create'">
-  <h2>Create Outfit</h2>
-  <button ng-click="profile.addOutfit()">Add Outfit</button>
-</div>
+  <div class="created-outfit" ng-show="profile.activeTab === 'created'">
+    <p>Nothing to show... yet! Pins you create will live here.</p>
+    <button class="create-btn" ng-click="profile.addOutfit()">
+      Create Outfit
+    </button>
+  </div>
 
-<div class="your-outfits" ng-show="profile.activeTab === 'outfits'">
-  <div id="createdContent">
-    <div class="outfit-card" ng-repeat="outfit in profile.userOutfits">
-      <!-- Content for each outfit -->
-    </div>
+  <div class="saved-outfits" ng-show="profile.activeTab === 'saved'">
+    <p>You haven't saved any Pins yet.</p>
+    <button class="find-ideas-btn" ng-click="profile.goBack()">
+      Find Ideas
+    </button>
   </div>
 </div>

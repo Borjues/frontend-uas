@@ -50,8 +50,9 @@ body {
 .profile-tabs {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+  gap: 40px;
+  margin: 30px 0;
+  position: relative;
 }
 
 .profile-tabs button {
@@ -60,41 +61,70 @@ body {
   color: #555;
   background: none;
   border: none;
-  border-bottom: 3px solid transparent;
   cursor: pointer;
-  transition: color 0.3s ease, border-bottom 0.3s ease;
+  position: relative;
+  border-radius: 8px;
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .profile-tabs button.active {
   color: #ff885b;
-  border-bottom: 3px solid #ff885b;
+  background-color: transparent;
 }
 
-/* Create Outfit Section */
-.create-outfit {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.profile-tabs button.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 2px;
+  background-color: #ff885b;
+  border-radius: 0;
 }
 
-.create-outfit button {
+.profile-tabs button:hover:not(.active) {
+  background-color: #e6e6e6;
+  border-radius: 8px;
+}
+
+/* Tab Content */
+.tab-content {
+  text-align: center;
+}
+
+.created-outfit,
+.saved-outfits {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.created-outfit p,
+.saved-outfits p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.create-btn,
+.find-ideas-btn {
   padding: 10px 20px;
   background-color: #ff885b;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
 }
 
-.create-outfit button:hover {
+.create-btn:hover,
+.find-ideas-btn:hover {
   background-color: #e57c4d;
 }
 
-/* Your Outfits Section */
-#createdContent {
+/* Saved Outfits Section */
+#savedContent {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -102,7 +132,7 @@ body {
   justify-content: flex-start;
 }
 
-.outfit-card {
+.saved-outfits .outfit-card {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -111,7 +141,7 @@ body {
   height: 300px;
 }
 
-.outfit-card img {
+.saved-outfits .outfit-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -123,18 +153,46 @@ footer {
   display: none;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .profile-image {
     width: 100px;
     height: 100px;
   }
 
-  .create-outfit {
-    width: 90%;
+  .profile-info h1 {
+    font-size: 20px;
   }
 
-  .outfit-card {
+  .profile-tabs {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .profile-tabs button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .created-outfit,
+  .saved-outfits {
+    width: 90%;
+    margin: 20px auto;
+    padding: 15px;
+  }
+
+  .saved-outfits #savedContent {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .saved-outfits .outfit-card {
     width: 100%;
     height: auto;
+    padding: 10px;
+  }
+
+  .saved-outfits .outfit-card img {
+    height: 200px;
   }
 }

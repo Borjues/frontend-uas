@@ -227,7 +227,7 @@ angular
     function ($scope, $location, AuthService) {
       var vm = this;
 
-      vm.activeTab = "create";
+      vm.activeTab = "created"; // Default to "created"
       var currentUser = JSON.parse(localStorage.getItem("user"));
 
       vm.user = {
