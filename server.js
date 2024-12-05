@@ -6,6 +6,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const User = require("./models/User");
+const Outfit = require("./models/Outfit");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -65,6 +66,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+// Login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -76,12 +78,72 @@ app.post("/login", async (req, res) => {
     // Bandingkan password yang dimasukkan dengan yang ada di database
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      res.status(200).send({ message: "Login successful" });
+      res.status(200).send({ message: "Login successful", userId: user._id });
     } else {
       res.status(401).send({ message: "Invalid credentials" });
     }
   } catch (error) {
     res.status(500).send({ message: "Server error", error });
+  }
+});
+
+// Get user data
+app.get("/user/:username", async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error fetching user data", error: err.message });
+  }
+});
+
+// Get outfits by user ID
+app.get("/outfits/user/:userId", async (req, res) => {
+  try {
+    const outfits = await Outfit.find({ user: req.params.userId }).sort({
+      createdAt: -1,
+    });
+    res.json(outfits);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error fetching outfits", error: err.message });
+  }
+});
+
+// Create outfit
+app.post("/outfits", async (req, res) => {
+  try {
+    const { name, description, image, userId } = req.body;
+
+    if (!name || !description || !image || !userId) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const newOutfit = new Outfit({
+      name,
+      description,
+      image,
+      user: userId,
+    });
+
+    await newOutfit.save();
+    res
+      .status(201)
+      .json({ message: "Outfit created successfully!", outfit: newOutfit });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error creating outfit", error: err.message });
   }
 });
 
