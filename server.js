@@ -6,7 +6,6 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const User = require("./models/User");
-const Outfit = require("./models/Outfit");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -83,25 +82,6 @@ app.post("/login", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({ message: "Server error", error });
-  }
-});
-
-// Endpoint untuk membuat outfit
-app.post("/outfits", async (req, res) => {
-  try {
-    const { name, description, image } = req.body;
-
-    if (!name || !description || !image) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-
-    const newOutfit = new Outfit({ name, description, image });
-    await newOutfit.save();
-
-    res.status(201).json(newOutfit);
-  } catch (error) {
-    console.error("Error creating outfit:", error);
-    res.status(500).json({ message: "Failed to create outfit", error });
   }
 });
 

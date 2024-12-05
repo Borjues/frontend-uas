@@ -224,21 +224,18 @@ angular
   .controller("ProfileController", [
     "$scope",
     "$location",
-    "$http", // Tambahkan $http untuk HTTP request
+    "$http",
     "AuthService",
     function ($scope, $location, $http, AuthService) {
       var vm = this;
 
-      vm.activeTab = "created"; // Default to "created"
+      vm.activeTab = "created";
       var currentUser = JSON.parse(localStorage.getItem("user"));
 
       vm.user = {
         username: currentUser ? currentUser.username : "Guest",
         profileImage: "../image/swain.jpeg",
       };
-
-      vm.userOutfits = [];
-      vm.newOutfit = { name: "", description: "", image: "" };
 
       vm.openCreatePopup = function () {
         vm.isPopupVisible = true;
@@ -249,50 +246,8 @@ angular
         vm.newOutfit = { name: "", description: "", image: "" };
       };
 
-      vm.submitOutfit = function () {
-        if (
-          vm.newOutfit.name &&
-          vm.newOutfit.description &&
-          vm.newOutfit.image
-        ) {
-          vm.userOutfits.push({
-            name: vm.newOutfit.name,
-            description: vm.newOutfit.description,
-            image: vm.newOutfit.image,
-          });
-          vm.closePopup();
-        } else {
-          alert("Please fill in all fields!");
-        }
-      };
-
       vm.setTab = function (tab) {
         vm.activeTab = tab;
-      };
-
-      vm.createOutfit = function () {
-        // Validasi input
-        if (
-          !vm.newOutfit.name ||
-          !vm.newOutfit.description ||
-          !vm.newOutfit.image
-        ) {
-          alert("All fields are required!");
-          return;
-        }
-
-        // Kirim data ke server
-        $http
-          .post("http://localhost:4000/outfits", vm.newOutfit)
-          .then(function (response) {
-            alert("Outfit created successfully!");
-            vm.userOutfits.push(response.data);
-            vm.newOutfit = { name: "", description: "", image: "" };
-          })
-          .catch(function (error) {
-            console.error("Error creating outfit:", error);
-            alert("Failed to create outfit.");
-          });
       };
 
       vm.goBack = function () {
