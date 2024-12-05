@@ -40,10 +40,11 @@
         </div>
       </div>
 
-      <a href="#!/profile" class="profile"></a>
+      <a href="#!/profile" class="profile" ng-if="isLoggedIn"></a>
 
       <div class="auth-links" ng-if="!isLoggedIn">
         <a href="#!/login">Login</a>
+        <span>/</span>
         <a href="#!/register">Register</a>
       </div>
 
