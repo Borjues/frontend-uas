@@ -87,6 +87,62 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.put("/user/:userId", async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    // Check if username already exists
+    const existingUser = await User.findOne({
+      username: username,
+      _id: { $ne: req.params.userId },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already taken" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { username: username },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "Username updated successfully",
+      user: {
+        _id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+      },
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error updating username", error: err.message });
+  }
+});
+
+app.delete("/user/:id", async (req, res) => {
+  try {
+    await Outfit.deleteMany({ user: req.params.id });
+
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // Get user data
 app.get("/user/:username", async (req, res) => {
   try {
@@ -106,7 +162,7 @@ app.get("/user/:username", async (req, res) => {
   }
 });
 
-// Get outfits by user ID
+// Get outfits
 app.get("/outfits/user/:userId", async (req, res) => {
   try {
     const outfits = await Outfit.find({ user: req.params.userId }).sort({

@@ -1,12 +1,18 @@
 <div class="profile-header">
+  <!-- Header Section -->
+  <button class="logout-button" ng-click="profile.logout()">Logout</button>
   <a href="#!/" class="back-button" id="backButton">← Back</a>
 
+  <!-- Profile Info -->
   <img src="icons/user-solid.svg" class="profile-image" alt="Profile Picture" />
-
   <div class="profile-info">
     <h1>{{profile.user.username}}</h1>
+    <button ng-click="profile.openEditUsername()" class="edit-profile-btn">
+      Edit Profile
+    </button>
   </div>
 
+  <!-- Tabs Section -->
   <div class="profile-tabs">
     <button
       id="createdTab"
@@ -26,6 +32,7 @@
     </button>
   </div>
 
+  <!-- Content Sections -->
   <div class="created-outfit" ng-show="profile.activeTab === 'created'">
     <button class="create-btn" ng-click="profile.openCreatePopup()">
       Create Outfit
@@ -54,74 +61,76 @@
   </div>
 </div>
 
-<!-- Edit Username Popup -->
-<div class="popup-overlay" ng-show="profile.isEditUsernameVisible">
-  <div class="popup-content">
-    <h2>Edit Username</h2>
+<!-- Popups -->
+<!-- Edit Profile Popup -->
+<div
+  class="popup-overlay"
+  ng-show="profile.isEditUsernameVisible"
+  ng-click="profile.closeEditUsername($event)"
+>
+  <div class="popup-content edit-username">
+    <h2>Edit Profile</h2>
     <div class="form-group">
       <label>New Username</label>
       <input
         type="text"
-        class="form-control"
         ng-model="profile.newUsername"
         placeholder="Enter new username"
       />
     </div>
     <div class="popup-actions">
-      <button class="save-btn" ng-click="profile.updateUsername()">
+      <button class="submit-btn" ng-click="profile.updateUsername($event)">
         Save Changes
       </button>
       <button class="cancel-btn" ng-click="profile.closeEditUsername()">
         Cancel
       </button>
     </div>
+    <div class="delete-section">
+      <hr class="divider" />
+      <button class="delete-btn" ng-click="profile.deleteAccount($event)">
+        Delete Account
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- Popup Create Outfit -->
-<div class="popup-overlay" ng-show="profile.isPopupVisible">
+<!-- Create Outfit Popup -->
+<div
+  class="popup-overlay"
+  ng-show="profile.isPopupVisible"
+  ng-click="profile.closePopup($event)"
+>
   <div class="popup-content">
     <h2>Create New Outfit</h2>
-    <form ng-submit="profile.submitOutfit()">
-      <div class="form-group">
-        <label for="outfitName">Outfit Name</label>
-        <input
-          type="text"
-          id="outfitName"
-          ng-model="profile.newOutfit.name"
-          placeholder="Enter outfit name"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="outfitDescription">Description</label>
-        <textarea
-          id="outfitDescription"
-          ng-model="profile.newOutfit.description"
-          placeholder="Enter outfit description"
-          required
-        ></textarea>
-      </div>
-      <div class="form-group">
-        <label for="outfitImage">Image URL</label>
-        <input
-          type="url"
-          id="outfitImage"
-          ng-model="profile.newOutfit.image"
-          placeholder="Upload Image"
-          required
-        />
-      </div>
-      <div class="popup-actions">
-        <button type="submit" class="submit-btn">Save</button>
-        <button
-          type="button"
-          class="cancel-btn"
-          ng-click="profile.closePopup()"
-        >
-          Cancel
-        </button>
-      </div>
-    </form>
+    <div class="form-group">
+      <label>Outfit Name</label>
+      <input
+        type="text"
+        ng-model="profile.newOutfit.name"
+        placeholder="Enter outfit name"
+      />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea
+        ng-model="profile.newOutfit.description"
+        placeholder="Enter outfit description"
+      ></textarea>
+    </div>
+    <div class="form-group">
+      <label>Image URL</label>
+      <input
+        type="text"
+        ng-model="profile.newOutfit.image"
+        placeholder="Enter image URL"
+      />
+    </div>
+    <div class="popup-actions">
+      <button class="submit-btn" ng-click="profile.submitOutfit($event)">
+        Save
+      </button>
+      <button class="cancel-btn" ng-click="profile.closePopup()">Cancel</button>
+    </div>
   </div>
 </div>

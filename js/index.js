@@ -279,12 +279,92 @@ angular
       var vm = this;
 
       vm.activeTab = "created";
+      vm.isEditUsernameVisible = false;
+      vm.newUsername = "";
       vm.userOutfits = [];
       vm.isPopupVisible = false;
       vm.newOutfit = {
         name: "",
         description: "",
         image: "",
+      };
+
+      vm.logout = function () {
+        localStorage.removeItem("user");
+
+        $location.path("/login");
+      };
+
+      vm.openEditUsername = function () {
+        if (!AuthService.isLoggedIn()) {
+          swal("Error!", "Please login first", "error");
+          $location.path("/login");
+          return;
+        }
+        vm.newUsername = vm.user.username;
+        vm.isEditUsernameVisible = true;
+      };
+
+      vm.closeEditUsername = function (event) {
+        if (event && event.target === event.currentTarget) {
+          vm.isEditUsernameVisible = false;
+        } else if (!event) {
+          vm.isEditUsernameVisible = false;
+        }
+      };
+
+      vm.updateUsername = function () {
+        if (!vm.newUsername.trim()) {
+          swal("Error!", "Username cannot be empty", "error");
+          return;
+        }
+
+        $http
+          .put(`http://localhost:4000/user/${vm.user._id}`, {
+            username: vm.newUsername,
+          })
+          .then(function (response) {
+            // Update local storage with new username
+            const userData = JSON.parse(localStorage.getItem("user"));
+            userData.username = vm.newUsername;
+            localStorage.setItem("user", JSON.stringify(userData));
+
+            // Update the user object in the controller
+            vm.user.username = vm.newUsername;
+
+            swal("Success!", "Username updated successfully", "success");
+            vm.closeEditUsername();
+          })
+          .catch(function (error) {
+            swal(
+              "Error!",
+              error.data.message || "Failed to update username",
+              "error"
+            );
+          });
+      };
+
+      vm.deleteAccount = function () {
+        swal({
+          title: "Are you sure?",
+          text: "Once deleted, you will not be able to recover your account and all your created outfits!",
+          icon: "warning",
+          buttons: ["Cancel", "Yes, delete my account"],
+          dangerMode: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            $http
+              .delete(`http://localhost:4000/user/${vm.user._id}`)
+              .then(function (response) {
+                vm.isEditUsernameVisible = false;
+                localStorage.removeItem("user");
+                $location.path("/login");
+              })
+              .catch(function (error) {
+                swal("Error!", "Failed to delete account", "error");
+              });
+          }
+        });
       };
 
       // Function to fetch user data and outfits
@@ -326,9 +406,14 @@ angular
         vm.isPopupVisible = true;
       };
 
-      vm.closePopup = function () {
-        vm.isPopupVisible = false;
-        vm.newOutfit = { name: "", description: "", image: "" };
+      vm.closePopup = function (event) {
+        if (event && event.target === event.currentTarget) {
+          vm.isPopupVisible = false;
+          vm.newOutfit = { name: "", description: "", image: "" };
+        } else if (!event) {
+          vm.isPopupVisible = false;
+          vm.newOutfit = { name: "", description: "", image: "" };
+        }
       };
 
       vm.submitOutfit = function () {
