@@ -53,21 +53,26 @@ body {
   color: #ff6f61;
 }
 
-.profile a {
-  color: #333;
-  font-size: 24px;
-  transition: color 0.3s ease;
-}
-
-.profile a:hover {
-  color: #ff6f61;
+.profile {
+  background-image: url(../icons/user-solid.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 25px;
+  height: 25px;
+  margin-left: 10px;
+  border: 1px solid #666;
+  border-radius: 100px;
 }
 
 .hamburger {
+  position: relative;
   display: none;
   width: 35px;
   cursor: pointer;
+  appearance: none;
   background: none;
+  outline: none;
   border: none;
   z-index: 99;
 }
@@ -129,23 +134,23 @@ body {
 
 .slider {
   position: relative;
-  width: 90%;
+  width: 90%; /* Lebar slider 90% dari parent */
   max-width: 1400px;
   height: 600px;
   margin: 30px auto;
-  overflow: hidden;
+  overflow: hidden; /* Memastikan hanya satu slide terlihat */
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .slides {
   display: flex;
-  transition: transform 0.5s ease-in-out;
-  width: 100%;
+  transition: transform 0.5s ease-in-out; /* Animasi pergeseran slider */
+  width: 100%; /* Default width sebelum pengaturan slide */
 }
 
 .slide {
-  flex: 0 0 100%;
+  flex: 0 0 100%; /* Setiap slide mengambil 100% lebar container */
   height: 600px;
   background-position: center;
   background-size: cover;
@@ -183,7 +188,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 8px;
+  gap: 8px; /* Jarak antar dot */
 }
 
 .dot {
@@ -198,6 +203,53 @@ body {
 .dot.active,
 .dot:hover {
   background-color: #fff;
+}
+
+/* Media Query untuk Mobile */
+@media screen and (max-width: 768px) {
+  .slider {
+    height: 400px;
+  }
+
+  .slide {
+    height: 400px;
+  }
+
+  .arrow {
+    font-size: 20px;
+    padding: 10px;
+  }
+
+  .dot {
+    height: 10px;
+    width: 10px;
+  }
+}
+
+.dot.active,
+.dot:hover {
+  background-color: #fff;
+}
+
+/* Media Query untuk Mobile */
+@media screen and (max-width: 768px) {
+  .slider {
+    height: 400px;
+  }
+
+  .slide {
+    height: 400px;
+  }
+
+  .arrow {
+    font-size: 20px;
+    padding: 10px;
+  }
+
+  .dot {
+    height: 10px;
+    width: 10px;
+  }
 }
 
 .recently-posted h2 {
@@ -229,61 +281,22 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile and Tablet Styles */
-@media screen and (max-width: 768px) {
-  .slider {
-    height: 400px;
-  }
-
-  .slide {
-    height: 400px;
-  }
-
-  .arrow {
-    font-size: 20px;
-    padding: 10px;
-  }
-
-  .dot {
-    height: 10px;
-    width: 10px;
-  }
-
-  .navbar {
-    padding: 10px 5%;
-  }
-
-  .image-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .slider,
-  .slide {
-    height: 300px;
-  }
-
-  .image-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-content {
-    width: 95%;
-    padding: 20px;
-  }
-}
-
 @media (max-width: 800px) {
+  .col {
+    width: calc(100% / 2);
+  }
   .hamburger {
     display: block;
   }
-
   .mobile-nav.is-active {
     left: 0;
   }
-
-  .nav,
+  .mobile-nav a {
+    margin: 0 auto 16px;
+  }
+  .nav {
+    display: none;
+  }
   .profile {
     display: none;
   }
@@ -307,159 +320,96 @@ body {
   }
 }
 
-/* Modal Styles */
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 15px 5%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .nav {
+    margin-top: 15px;
+  }
+
+  .nav a {
+    margin: 0 10px;
+  }
+
+  .slider,
+  .slide {
+    height: 400px;
+  }
+
+  .image-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .slider,
+  .slide {
+    height: 300px;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+}
+
 .modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
   position: fixed;
-  top: 0;
+  z-index: 1;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.9);
 }
 
 .modal-content {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  max-width: 800px;
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  animation: fadeIn 0.3s ease;
-}
-
-.modal-content img {
-  width: 50%;
-  object-fit: cover;
-}
-
-.modal-info {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
 }
 
 .caption {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #333;
+  margin: auto;
+  display: block;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
 }
 
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.comments {
-  margin-top: 15px;
-}
-
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-.like-button {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: black; /* Default color */
-  transition: color 0.3s ease;
-}
-
-.like-button .liked {
-  color: red; /* Color when liked */
-}
-
-
-
-/*//*||\\*/
-.outfit-card {
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 16px;
-}
-
-img {
-  width: 100%;
-  height: auto;
-}
-
-.outfit-details {
-  padding: 16px;
-}
-
-.like-section {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  height: 10px;
-  border: brown;
-}
-
-.heart-icon {
-  width: 24px;
-  height: 24px;
-  background-color: red;
-  mask: url('heart-icon.svg') no-repeat center;
-  -webkit-mask: url('heart-icon.svg') no-repeat center;
-  cursor: pointer;
-}
-
-.comments-section {
-  display: flex;
-  flex-direction: column;
-}
-
-.comments-container {
-  max-height: 150px; /* Set a fixed height for the comments box */
-  overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-  height: 2000px;
-}
-
-.comment-input {
-  display: flex;
-  gap: 8px;
-}
-
-.comment-input input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.comment-input button {
-  padding: 8px 16px;
-  background-color: #007bff;
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
   color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-.comment-input button:hover {
-  background-color: #0056b3;
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }

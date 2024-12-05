@@ -24,7 +24,7 @@
   <body>
     <nav class="navbar">
       <div class="logo">
-        <span class="bold"> <span class="orange">Outfit</span>ology </span>
+        <a href="#!/" ng-style="{'text-decoration':'none','color':'black'}" class="bold"> <span class="orange">Outfit</span>ology </a>
       </div>
 
       <div class="nav">
@@ -40,9 +40,7 @@
         </div>
       </div>
 
-      <div class="profile">
-        <a href="#!/profile"><i class="bx bxs-user-circle"></i></a>
-      </div>
+      <a href="#!/profile" class="profile"></a>
 
       <div class="auth-links" ng-if="!isLoggedIn">
         <a href="#!/login">Login</a>

@@ -1,5 +1,8 @@
 <div id="explore-page" class="explore">
-  <div id="loader" ng-show="explore.isLoading"></div>
+  <div class="loader-container" ng-show="explore.isLoading">
+    <div id="loader" ng-show="explore.isLoading"></div>
+    <div class="loader-text" ng-show="explore.isLoading">Loading outfits for you (｡•̀ᴗ-)✧</div>
+  </div>
 
   <div id="container">
     <div class="col" ng-repeat="column in explore.columns">
