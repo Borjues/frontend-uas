@@ -68,7 +68,6 @@ angular.module("outfitologyApp").factory("UnsplashService", [
 
 // Controllers
 
-// Home Controller
 angular
   .module("outfitologyApp")
   .controller("HomeController", [
@@ -76,10 +75,13 @@ angular
     "$interval",
     function ($scope, $interval) {
       var vm = this;
+
+      // Initialize variables
       vm.currentSlide = 0;
       vm.modalOpen = false;
       vm.selectedOutfit = null;
 
+      // Slider images
       vm.slides = [
         {
           url: "https://plus.unsplash.com/premium_photo-1708633003273-bed7672ddd81?q=80&w=1821&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -92,14 +94,31 @@ angular
         },
       ];
 
-      // Load your outfit images here
+      // Outfit images
       vm.outfits = [
-        "https://i.pinimg.com/736x/e0/06/c7/e006c7ef8cec205365c1ac1474c41650.jpg",
-        "https://i.pinimg.com/enabled_hi/564x/c3/ed/10/c3ed101126a804d5a87f913c38a14fc7.jpg",
-        "https://i.pinimg.com/564x/3f/3f/ce/3f3fcebede07d307dbf6bfe6215e2e68.jpg",
-        "https://i.pinimg.com/736x/49/64/79/496479a5fdb733d1d7f119bd8cf3c41d.jpg",
+        {
+          url: "https://i.pinimg.com/736x/e0/06/c7/e006c7ef8cec205365c1ac1474c41650.jpg",
+          alt: "Outfit 1",
+          caption: "Stylish Summer Outfit",
+        },
+        {
+          url: "https://i.pinimg.com/564x/c3/ed/10/c3ed101126a804d5a87f913c38a14fc7.jpg",
+          alt: "Outfit 2",
+          caption: "Casual Chic Look",
+        },
+        {
+          url: "https://i.pinimg.com/564x/3f/3f/ce/3f3fcebede07d307dbf6bfe6215e2e68.jpg",
+          alt: "Outfit 3",
+          caption: "Elegant Party Dress",
+        },
+        {
+          url: "https://i.pinimg.com/736x/49/64/79/496479a5fdb733d1d7f119bd8cf3c41d.jpg",
+          alt: "Outfit 4",
+          caption: "Urban Streetwear",
+        },
       ];
 
+      // Functions for slider navigation
       vm.nextSlide = function () {
         vm.currentSlide = (vm.currentSlide + 1) % vm.slides.length;
       };
@@ -117,6 +136,7 @@ angular
         return vm.currentSlide === index;
       };
 
+      // Modal functions
       vm.openModal = function (outfit) {
         vm.selectedOutfit = outfit;
         vm.modalOpen = true;
@@ -127,7 +147,7 @@ angular
         vm.selectedOutfit = null;
       };
 
-      // Auto slide
+      // Auto slide interval (5 seconds)
       var autoSlide = $interval(vm.nextSlide, 5000);
 
       // Cleanup interval on scope destroy

@@ -19,6 +19,7 @@ body {
 
 .navbar {
   display: flex;
+  height: 80px;
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
@@ -131,23 +132,23 @@ body {
 
 .slider {
   position: relative;
-  width: 90%;
+  width: 90%; /* Lebar slider 90% dari parent */
   max-width: 1400px;
   height: 600px;
   margin: 30px auto;
-  overflow: hidden;
+  overflow: hidden; /* Memastikan hanya satu slide terlihat */
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .slides {
   display: flex;
-  width: 300%;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.5s ease-in-out; /* Animasi pergeseran slider */
+  width: 100%; /* Default width sebelum pengaturan slide */
 }
 
 .slide {
-  width: 100%;
+  flex: 0 0 100%; /* Setiap slide mengambil 100% lebar container */
   height: 600px;
   background-position: center;
   background-size: cover;
@@ -164,6 +165,7 @@ body {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  z-index: 2;
 }
 
 .arrow:hover {
@@ -184,15 +186,14 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  gap: 8px; /* Jarak antar dot */
 }
 
 .dot {
   height: 12px;
   width: 12px;
-  margin: 0 5px;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
-  display: inline-block;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -201,6 +202,54 @@ body {
 .dot:hover {
   background-color: #fff;
 }
+
+/* Media Query untuk Mobile */
+@media screen and (max-width: 768px) {
+  .slider {
+    height: 400px;
+  }
+
+  .slide {
+    height: 400px;
+  }
+
+  .arrow {
+    font-size: 20px;
+    padding: 10px;
+  }
+
+  .dot {
+    height: 10px;
+    width: 10px;
+  }
+}
+
+.dot.active,
+.dot:hover {
+  background-color: #fff;
+}
+
+/* Media Query untuk Mobile */
+@media screen and (max-width: 768px) {
+  .slider {
+    height: 400px;
+  }
+
+  .slide {
+    height: 400px;
+  }
+
+  .arrow {
+    font-size: 20px;
+    padding: 10px;
+  }
+
+  .dot {
+    height: 10px;
+    width: 10px;
+  }
+}
+
 
 .recently-posted h2 {
   text-align: center;
