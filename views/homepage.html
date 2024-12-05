@@ -1,4 +1,6 @@
-<div class="slider">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+<div class="slider" ng-controller="HomeController as home">
   <div class="slides" ng-style="{'transform': 'translateX(-' + home.currentSlide * 100 + '%)'}">
     <div class="slide" ng-repeat="slide in home.slides" ng-style="{'background-image': 'url(' + slide.url + ')'}"></div>
   </div>
@@ -7,7 +9,7 @@
   <div class="arrow right-arrow" ng-click="home.nextSlide()">❯</div>
 
   <div class="dots">
-    <span class="dot" ng-repeat="slide in home.slides" ng-click="home.setCurrentSlide($index)" ng-class="{'active': home.isActive($index)}"> </span>
+    <span class="dot" ng-repeat="slide in home.slides" ng-click="home.setCurrentSlide($index)" ng-class="{'active': home.isActive($index)}"></span>
   </div>
 </div>
 
@@ -15,13 +17,79 @@
   <h2>Outfit Of The Day</h2>
 </div>
 
-<div class="recently-posted">
-  <div id="recently-posted" class="image-grid">
-    <img ng-repeat="outfit in home.outfits" ng-src="{{outfit.url}}" alt="{{outfit.alt}}" loading="lazy" ng-click="home.openModal(outfit)" />
+
+<div id="imageModal" class="modal" ng-show="home.modalOpen">
+  <div id="caption" class="caption">{{home.selectedOutfit.caption}}</div>
+</div>
+
+<!-- Image Grid -->
+<div id="recently-posted" class="image-grid">
+  <div class="outfit-card" ng-repeat="outfit in home.outfits">
+    <!-- Image -->
+    <img
+      ng-src="{{outfit.url}}"
+      alt="{{outfit.alt}}"
+      loading="lazy"
+      ng-click="home.openImage(outfit)"
+    />
+
+    <!-- Like Button -->
+    <div class="like-section">
+      <button ng-click="home.toggleLike(outfit)">
+        <i class="heart-icon" ng-class="{'liked': outfit.liked}"></i>
+      </button>
+      <span>{{outfit.likeCount}} likes</span>
+    </div>
   </div>
 </div>
 
-<div id="imageModal" class="modal" ng-show="home.modalOpen">
-  <span class="close" ng-click="home.closeModal()">x</span>
-  <div id="caption" class="caption">{{home.selectedOutfit.caption}}</div>
+<!-- Modal -->
+<div 
+  id="imageModal" 
+  class="modal" 
+  ng-show="home.modalOpen" 
+  ng-click="home.closeModal()"
+>
+  <!-- Overlay -->
+  <div 
+    class="modal-content" 
+    ng-click="$event.stopPropagation()"
+  >
+    <!-- Selected Image -->
+    <img ng-src="{{home.selectedOutfit.url}}" alt="{{home.selectedOutfit.alt}}" />
+
+    <!-- Modal Info -->
+    <div class="modal-info">
+      <!-- Caption -->
+      <p class="caption">{{home.selectedOutfit.caption}}</p>
+
+      <!-- Like Button -->
+      
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <div class="actions">
+          <button class="like-button" ng-click="home.toggleLike(home.selectedOutfit)">
+            <span ng-class="{'liked': home.selectedOutfit.liked}">❤</span>
+          </button>
+          <span class="like-count">{{home.selectedOutfit.likeCount}} likes</span>
+        </div>
+        <h4>Comments</h4>
+        <div class="comments-container">
+          <ul>
+            <li ng-repeat="comment in home.selectedOutfit.comments">
+              <strong>User:</strong> {{ comment.text }}
+            </li>
+          </ul>
+        </div>
+        <div class="comment-input">
+          <input
+            type="text"
+            ng-model="home.selectedOutfit.newComment"
+            placeholder="Add a comment..."
+          />
+          <button ng-click="home.addComment(home.selectedOutfit)">Post</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

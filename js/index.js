@@ -67,7 +67,6 @@ angular.module("outfitologyApp").factory("UnsplashService", [
 ]);
 
 // Controllers
-
 angular
   .module("outfitologyApp")
   .controller("HomeController", [
@@ -100,23 +99,65 @@ angular
           url: "https://i.pinimg.com/736x/e0/06/c7/e006c7ef8cec205365c1ac1474c41650.jpg",
           alt: "Outfit 1",
           caption: "Stylish Summer Outfit",
+          comments: [], // Array to hold comments
+          newComment: "", // Input for adding a new comment
+          likeCount: 0, // Counter for likes
+          liked: false, // Boolean to track like status
         },
         {
           url: "https://i.pinimg.com/564x/c3/ed/10/c3ed101126a804d5a87f913c38a14fc7.jpg",
           alt: "Outfit 2",
           caption: "Casual Chic Look",
+          comments: [],
+          newComment: "",
+          likeCount: 0,
+          liked: false,
         },
         {
           url: "https://i.pinimg.com/564x/3f/3f/ce/3f3fcebede07d307dbf6bfe6215e2e68.jpg",
           alt: "Outfit 3",
           caption: "Elegant Party Dress",
+          comments: [],
+          newComment: "",
+          likeCount: 0,
+          liked: false,
         },
         {
           url: "https://i.pinimg.com/736x/49/64/79/496479a5fdb733d1d7f119bd8cf3c41d.jpg",
           alt: "Outfit 4",
           caption: "Urban Streetwear",
+          comments: [],
+          newComment: "",
+          likeCount: 0,
+          liked: false,
         },
       ];
+
+      // Open modal
+      vm.openImage = function (outfit) {
+        vm.selectedOutfit = outfit;
+        vm.modalOpen = true;
+      };
+
+      // Close modal
+      vm.closeModal = function () {
+        vm.modalOpen = false;
+        vm.selectedOutfit = null;
+      };
+
+      // Toggle like for a specific outfit
+      vm.toggleLike = function (outfit) {
+        outfit.liked = !outfit.liked; // Toggle the liked status
+        outfit.likeCount += outfit.liked ? 1 : -1; // Update the like count
+      };
+
+      // Add comment for a specific outfit
+      vm.addComment = function (outfit) {
+        if (outfit.newComment.trim() !== "") {
+          outfit.comments.push({ user: "User", text: outfit.newComment }); // Add comment to the specific outfit
+          outfit.newComment = ""; // Clear the input field
+        }
+      };
 
       // Functions for slider navigation
       vm.nextSlide = function () {
@@ -134,17 +175,6 @@ angular
 
       vm.isActive = function (index) {
         return vm.currentSlide === index;
-      };
-
-      // Modal functions
-      vm.openModal = function (outfit) {
-        vm.selectedOutfit = outfit;
-        vm.modalOpen = true;
-      };
-
-      vm.closeModal = function () {
-        vm.modalOpen = false;
-        vm.selectedOutfit = null;
       };
 
       // Auto slide interval (5 seconds)
