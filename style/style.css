@@ -7,11 +7,15 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
-  background-color: #f8f9fa;
-  color: #333;
-  line-height: 1.6;
-}
+    font-family: "Poppins", sans-serif;
+    background-image: url("/image/Home.jpg");
+    background-size: cover; /* Ensures the image covers the entire area */
+    background-repeat: no-repeat; /* Prevents tiling */
+    background-attachment: fixed; /* Keeps the background fixed during scroll */
+    background-position: center; /* Centers the image */
+    color: #333;
+    line-height: 1.6;
+  }
 
 .bx {
   font-size: 40px;
@@ -415,14 +419,6 @@ img {
   border: brown;
 }
 
-.heart-icon {
-  width: 24px;
-  height: 24px;
-  background-color: red;
-  mask: url('heart-icon.svg') no-repeat center;
-  -webkit-mask: url('heart-icon.svg') no-repeat center;
-  cursor: pointer;
-}
 
 .comments-section {
   display: flex;
