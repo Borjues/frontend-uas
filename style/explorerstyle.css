@@ -66,6 +66,18 @@ body {
   border-radius: 100px;
 }
 
+.auth-links a {
+  text-decoration: none;
+  color: black;
+}
+
+.auth-links a:hover {
+  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: #ff885b;
+  text-decoration-thickness: 2px;
+}
+
 .hamburger {
   position: relative;
   display: none;
