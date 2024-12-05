@@ -72,13 +72,15 @@ angular
   .controller("HomeController", [
     "$scope",
     "$interval",
-    function ($scope, $interval) {
+    "$http",
+    function ($scope, $interval, $http) {
       var vm = this;
 
       // Initialize variables
       vm.currentSlide = 0;
       vm.modalOpen = false;
       vm.selectedOutfit = null;
+      vm.userOutfits = [];
 
       // Slider images
       vm.slides = [
@@ -132,6 +134,30 @@ angular
           liked: false,
         },
       ];
+
+      vm.fetchOutfits = function() {
+        $http.get('http://localhost:4000/outfits')
+          .then(function(response) {
+            vm.userOutfits = response.data.map(function(outfit) {
+              return {
+                url: outfit.image,
+                outfitName: outfit.name, // Add outfit name
+                description: outfit.description,
+                username: outfit.user.username,
+                comments: [],
+                newComment: "",
+                likeCount: 0,
+                liked: false
+              };
+            });
+          })
+          .catch(function(error) {
+            console.error('Error fetching outfits:', error);
+          });
+      };
+
+      // Call fetchOutfits when controller initializes
+      vm.fetchOutfits();
 
       // Open modal
       vm.openImage = function (outfit) {

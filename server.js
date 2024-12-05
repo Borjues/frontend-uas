@@ -147,6 +147,17 @@ app.post("/outfits", async (req, res) => {
   }
 });
 
+app.get("/outfits", async (req, res) => {
+  try {
+    const outfits = await Outfit.find()
+      .populate('user', 'username') // This populates the user information
+      .sort({ createdAt: -1 });
+    res.json(outfits);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching outfits", error: err.message });
+  }
+});
+
 // Jalankan server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

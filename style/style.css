@@ -422,13 +422,22 @@ img {
   padding: 16px;
 }
 
+.tombol {
+ background: none;
+ text-decoration: none;
+ border: none;
+}
+
 .like-section {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
   height: 10px;
-  border: brown;
+}
+
+.like-section .liked {
+  color: red; /* Color when liked */
 }
 
 
@@ -440,11 +449,12 @@ img {
 .comments-container {
   max-height: 150px; /* Set a fixed height for the comments box */
   overflow-y: auto; /* Enable vertical scrolling */
-  border: 1px solid #ccc;
+  border: 1px solid #666;
   padding: 8px;
   border-radius: 4px;
   margin-bottom: 16px;
-  height: 2000px;
+  height: 500px;
+  width: 500px;
 }
 
 .comment-input {
@@ -470,4 +480,160 @@ img {
 
 .comment-input button:hover {
   background-color: #0056b3;
+}
+
+
+.username {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+
+
+/**/
+
+/* These styles complement your existing CSS */
+.modal-content {
+  width: 85%;
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  background: white;
+}
+
+.modal-content img {
+  width: 65%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Modal and Comments Layout */
+.modal-info {
+  width: 35%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-left: 1px solid #ddd;
+}
+
+.modal-header {
+  margin-bottom: 16px;
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.caption {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+/* Main Sections Container */
+.sectionbesar {
+flex: 2;
+}
+
+/* Like Section */
+.like-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px; /* Tambahkan padding horizontal agar terlihat rapi */
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10; /* Tetapkan lapisan lebih tinggi agar selalu di atas */
+}
+
+/* Comments Section */
+.comments-section {
+  display: block;
+  height: 100%;
+  flex-direction: column;
+  flex: 0;
+  overflow: hidden; /* Hindari konten overflow */
+}
+
+.comments-container {
+  flex: 2;
+  height: 1000px; /* Sesuaikan dengan elemen lainnya */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f8f8f8;
+  padding: 16px;
+  margin: 8px 0;
+}
+
+/* Individual Comment */
+.comment {
+  padding: 12px;
+  margin-bottom: 8px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+/* Comment Input Section */
+.comment-input-section {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  padding: 16px;
+  border-top: 1px solid #eee;
+  z-index: 10; /* Pastikan selalu di atas konten */
+}
+
+.comment-input {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.comment-input button {
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Like Button */
+.tombol {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
+}
+
+.tombol.liked {
+  color: red;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .comments-container {
+    height: calc(100vh - 300px);
+  }
+
+  .comment-input-section {
+    padding: 12px;
+  }
 }
