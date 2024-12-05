@@ -31,8 +31,21 @@
   </div>
 
   <div class="created-outfit" ng-show="profile.activeTab === 'created'">
-    <p>Nothing to show... yet! Pins you create will live here.</p>
-    <button class="create-btn" ng-click="profile.addOutfit()">
+    <div ng-if="profile.userOutfits.length > 0">
+      <div ng-repeat="outfit in profile.userOutfits" class="outfit-card">
+        <img
+          ng-src="{{outfit.image}}"
+          alt="{{outfit.name}}"
+          class="outfit-image"
+        />
+        <h3>{{outfit.name}}</h3>
+        <p>{{outfit.description}}</p>
+      </div>
+    </div>
+    <p ng-if="profile.userOutfits.length === 0">
+      Nothing to show... yet! Pins you create will live here.
+    </p>
+    <button class="create-btn" ng-click="profile.openCreatePopup()">
       Create Outfit
     </button>
   </div>
@@ -42,5 +55,53 @@
     <button class="find-ideas-btn" ng-click="profile.goBack()">
       Find Ideas
     </button>
+  </div>
+</div>
+
+<!-- Popup Create Outfit -->
+<div class="popup-overlay" ng-show="profile.isPopupVisible">
+  <div class="popup-content">
+    <h2>Create New Outfit</h2>
+    <form ng-submit="profile.submitOutfit()">
+      <div class="form-group">
+        <label for="outfitName">Outfit Name</label>
+        <input
+          type="text"
+          id="outfitName"
+          ng-model="profile.newOutfit.name"
+          placeholder="Enter outfit name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="outfitDescription">Description</label>
+        <textarea
+          id="outfitDescription"
+          ng-model="profile.newOutfit.description"
+          placeholder="Enter outfit description"
+          required
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="outfitImage">Image URL</label>
+        <input
+          type="url"
+          id="outfitImage"
+          ng-model="profile.newOutfit.image"
+          placeholder="Enter image URL"
+          required
+        />
+      </div>
+      <div class="popup-actions">
+        <button type="submit" class="submit-btn">Save</button>
+        <button
+          type="button"
+          class="cancel-btn"
+          ng-click="profile.closePopup()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
   </div>
 </div>

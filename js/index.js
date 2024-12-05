@@ -105,7 +105,8 @@ angular
       };
 
       vm.prevSlide = function () {
-        vm.currentSlide = (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
+        vm.currentSlide =
+          (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
       };
 
       vm.setCurrentSlide = function (index) {
@@ -167,10 +168,12 @@ angular
               };
               storeUserSession(userSession);
 
-              swal("Success!", "Login successful.", "success").then(function () {
-                $location.path("/");
-                $scope.$apply();
-              });
+              swal("Success!", "Login successful.", "success").then(
+                function () {
+                  $location.path("/");
+                  $scope.$apply();
+                }
+              );
             })
             .catch(function (error) {
               swal("Oops!", "Wrong username or password.", "error");
@@ -199,13 +202,19 @@ angular
       vm.submitForm = function () {
         AuthService.register(vm.user.name, vm.user.email, vm.user.password)
           .then(function (response) {
-            swal("Success!", response.data.message, "success").then(function () {
-              $location.path("/login");
-              $scope.$apply();
-            });
+            swal("Success!", response.data.message, "success").then(
+              function () {
+                $location.path("/login");
+                $scope.$apply();
+              }
+            );
           })
           .catch(function (error) {
-            swal("Error!", error.data.message || "An unknown error occurred", "error");
+            swal(
+              "Error!",
+              error.data.message || "An unknown error occurred",
+              "error"
+            );
           });
       };
     },
@@ -215,8 +224,9 @@ angular
   .controller("ProfileController", [
     "$scope",
     "$location",
+    "$http", // Tambahkan $http untuk HTTP request
     "AuthService",
-    function ($scope, $location, AuthService) {
+    function ($scope, $location, $http, AuthService) {
       var vm = this;
 
       vm.activeTab = "created"; // Default to "created"
@@ -228,19 +238,61 @@ angular
       };
 
       vm.userOutfits = [];
+      vm.newOutfit = { name: "", description: "", image: "" };
+
+      vm.openCreatePopup = function () {
+        vm.isPopupVisible = true;
+      };
+
+      vm.closePopup = function () {
+        vm.isPopupVisible = false;
+        vm.newOutfit = { name: "", description: "", image: "" };
+      };
+
+      vm.submitOutfit = function () {
+        if (
+          vm.newOutfit.name &&
+          vm.newOutfit.description &&
+          vm.newOutfit.image
+        ) {
+          vm.userOutfits.push({
+            name: vm.newOutfit.name,
+            description: vm.newOutfit.description,
+            image: vm.newOutfit.image,
+          });
+          vm.closePopup();
+        } else {
+          alert("Please fill in all fields!");
+        }
+      };
 
       vm.setTab = function (tab) {
         vm.activeTab = tab;
       };
 
-      vm.addOutfit = function () {
-        // Implementation for adding new outfit
-        var newOutfit = {
-          name: "New Outfit",
-          description: "Outfit description",
-          image: "outfit-image-url",
-        };
-        vm.userOutfits.push(newOutfit);
+      vm.createOutfit = function () {
+        // Validasi input
+        if (
+          !vm.newOutfit.name ||
+          !vm.newOutfit.description ||
+          !vm.newOutfit.image
+        ) {
+          alert("All fields are required!");
+          return;
+        }
+
+        // Kirim data ke server
+        $http
+          .post("http://localhost:4000/outfits", vm.newOutfit)
+          .then(function (response) {
+            alert("Outfit created successfully!");
+            vm.userOutfits.push(response.data);
+            vm.newOutfit = { name: "", description: "", image: "" };
+          })
+          .catch(function (error) {
+            console.error("Error creating outfit:", error);
+            alert("Failed to create outfit.");
+          });
       };
 
       vm.goBack = function () {
@@ -314,7 +366,8 @@ angular
       angular.element($window).on("scroll", function () {
         if (vm.fetching) return;
 
-        var scrollTop = $window.pageYOffset || $document[0].documentElement.scrollTop;
+        var scrollTop =
+          $window.pageYOffset || $document[0].documentElement.scrollTop;
         var windowHeight = $window.innerHeight;
         var bodyHeight = $document[0].documentElement.scrollHeight;
 

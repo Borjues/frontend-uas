@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const User = require("./models/User"); // Import User model
+const User = require("./models/User");
+const Outfit = require("./models/Outfit");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -59,7 +60,9 @@ app.post("/register", async (req, res) => {
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
     console.error("Error in /register route:", err);
-    res.status(500).json({ message: "Error registering user", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error registering user", error: err.message });
   }
 });
 
@@ -80,6 +83,25 @@ app.post("/login", async (req, res) => {
     }
   } catch (error) {
     res.status(500).send({ message: "Server error", error });
+  }
+});
+
+// Endpoint untuk membuat outfit
+app.post("/outfits", async (req, res) => {
+  try {
+    const { name, description, image } = req.body;
+
+    if (!name || !description || !image) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const newOutfit = new Outfit({ name, description, image });
+    await newOutfit.save();
+
+    res.status(201).json(newOutfit);
+  } catch (error) {
+    console.error("Error creating outfit:", error);
+    res.status(500).json({ message: "Failed to create outfit", error });
   }
 });
 
