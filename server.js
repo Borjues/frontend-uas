@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const User = require("./models/User"); // Import User model
 
 const app = express();
@@ -38,8 +40,6 @@ app.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    console.log("Request Data:", { username, email, password }); // Debug input
-
     if (!username || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -49,12 +49,16 @@ app.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    const newUser = new User({ username, email, password });
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    console.log("Request Data:", { username, email, password: hashedPassword });
+
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
-    console.error("Error in /register route:", err); // Log error stack
+    console.error("Error in /register route:", err);
     res.status(500).json({ message: "Error registering user", error: err.message });
   }
 });
@@ -62,8 +66,14 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username, password });
-    if (user) {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(401).send({ message: "Invalid credentials" });
+    }
+
+    // Bandingkan password yang dimasukkan dengan yang ada di database
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
       res.status(200).send({ message: "Login successful" });
     } else {
       res.status(401).send({ message: "Invalid credentials" });

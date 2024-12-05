@@ -105,8 +105,7 @@ angular
       };
 
       vm.prevSlide = function () {
-        vm.currentSlide =
-          (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
+        vm.currentSlide = (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
       };
 
       vm.setCurrentSlide = function (index) {
@@ -168,12 +167,10 @@ angular
               };
               storeUserSession(userSession);
 
-              swal("Success!", "Login successful.", "success").then(
-                function () {
-                  $location.path("/");
-                  $scope.$apply();
-                }
-              );
+              swal("Success!", "Login successful.", "success").then(function () {
+                $location.path("/");
+                $scope.$apply();
+              });
             })
             .catch(function (error) {
               swal("Oops!", "Wrong username or password.", "error");
@@ -202,18 +199,13 @@ angular
       vm.submitForm = function () {
         AuthService.register(vm.user.name, vm.user.email, vm.user.password)
           .then(function (response) {
-            swal("Success!", response.data.message, "success").then(
-              function () {
-                $location.path("/login");
-              }
-            );
+            swal("Success!", response.data.message, "success").then(function () {
+              $location.path("/login");
+              $scope.$apply();
+            });
           })
           .catch(function (error) {
-            swal(
-              "Error!",
-              error.data.message || "An unknown error occurred",
-              "error"
-            );
+            swal("Error!", error.data.message || "An unknown error occurred", "error");
           });
       };
     },
@@ -322,8 +314,7 @@ angular
       angular.element($window).on("scroll", function () {
         if (vm.fetching) return;
 
-        var scrollTop =
-          $window.pageYOffset || $document[0].documentElement.scrollTop;
+        var scrollTop = $window.pageYOffset || $document[0].documentElement.scrollTop;
         var windowHeight = $window.innerHeight;
         var bodyHeight = $document[0].documentElement.scrollHeight;
 
