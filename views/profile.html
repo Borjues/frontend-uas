@@ -1,11 +1,7 @@
 <div class="profile-header">
   <a href="#!/" class="back-button" id="backButton">← Back</a>
 
-  <img
-    ng-src="{{profile.user.profileImage}}"
-    class="profile-image"
-    alt="Profile Picture"
-  />
+  <img src="icons/user-solid.svg" class="profile-image" alt="Profile Picture" />
 
   <div class="profile-info">
     <h1>{{profile.user.username}}</h1>
@@ -31,6 +27,9 @@
   </div>
 
   <div class="created-outfit" ng-show="profile.activeTab === 'created'">
+    <button class="create-btn" ng-click="profile.openCreatePopup()">
+      Create Outfit
+    </button>
     <div ng-if="profile.userOutfits.length > 0">
       <div ng-repeat="outfit in profile.userOutfits" class="outfit-card">
         <img
@@ -45,9 +44,6 @@
     <p ng-if="profile.userOutfits.length === 0">
       Nothing to show... yet! Pins you create will live here.
     </p>
-    <button class="create-btn" ng-click="profile.openCreatePopup()">
-      Create Outfit
-    </button>
   </div>
 
   <div class="saved-outfits" ng-show="profile.activeTab === 'saved'">
