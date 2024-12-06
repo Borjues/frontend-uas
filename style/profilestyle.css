@@ -335,6 +335,58 @@ footer {
   color: #fff;
 }
 
+.bulk-actions {
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.delete-selected-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-selected-btn:hover {
+  background-color: #c82333;
+}
+
+.outfit-selection {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.outfit-selection input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.outfit-card {
+  position: relative;
+}
+
+.edit-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
 @media (max-width: 768px) {
   .outfit-card {
     flex: 1 1 calc(50% - 15px);

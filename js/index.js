@@ -192,7 +192,8 @@ angular
       };
 
       vm.prevSlide = function () {
-        vm.currentSlide = (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
+        vm.currentSlide =
+          (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
       };
 
       vm.setCurrentSlide = function (index) {
@@ -244,10 +245,12 @@ angular
               };
               storeUserSession(userSession);
 
-              swal("Success!", "Login successful.", "success").then(function () {
-                $location.path("/");
-                $scope.$apply();
-              });
+              swal("Success!", "Login successful.", "success").then(
+                function () {
+                  $location.path("/");
+                  $scope.$apply();
+                }
+              );
             })
             .catch(function (error) {
               swal("Oops!", "Wrong username or password.", "error");
@@ -276,13 +279,19 @@ angular
       vm.submitForm = function () {
         AuthService.register(vm.user.name, vm.user.email, vm.user.password)
           .then(function (response) {
-            swal("Success!", response.data.message, "success").then(function () {
-              $location.path("/login");
-              $scope.$apply();
-            });
+            swal("Success!", response.data.message, "success").then(
+              function () {
+                $location.path("/login");
+                $scope.$apply();
+              }
+            );
           })
           .catch(function (error) {
-            swal("Error!", error.data.message || "An unknown error occurred", "error");
+            swal(
+              "Error!",
+              error.data.message || "An unknown error occurred",
+              "error"
+            );
           });
       };
     },
@@ -302,6 +311,15 @@ angular
       vm.userOutfits = [];
       vm.isPopupVisible = false;
       vm.newOutfit = {
+        name: "",
+        description: "",
+        image: "",
+      };
+
+      vm.selectedOutfits = [];
+      vm.isEditOutfitVisible = false;
+      vm.editingOutfit = {
+        _id: null,
         name: "",
         description: "",
         image: "",
@@ -354,7 +372,11 @@ angular
             vm.closeEditUsername();
           })
           .catch(function (error) {
-            swal("Error!", error.data.message || "Failed to update username", "error");
+            swal(
+              "Error!",
+              error.data.message || "Failed to update username",
+              "error"
+            );
           });
       };
 
@@ -383,7 +405,9 @@ angular
 
       // Function to fetch user data and outfits
       vm.fetchUserData = function () {
-        const currentUsername = JSON.parse(localStorage.getItem("user"))?.username;
+        const currentUsername = JSON.parse(
+          localStorage.getItem("user")
+        )?.username;
         if (!currentUsername) return;
 
         // Get user data
@@ -391,7 +415,9 @@ angular
           .get(`http://localhost:4000/user/${currentUsername}`)
           .then(function (response) {
             vm.user = response.data;
-            return $http.get(`http://localhost:4000/outfits/user/${vm.user._id}`);
+            return $http.get(
+              `http://localhost:4000/outfits/user/${vm.user._id}`
+            );
           })
           .then(function (response) {
             vm.userOutfits = response.data;
@@ -433,7 +459,11 @@ angular
           return;
         }
 
-        if (!vm.newOutfit.name || !vm.newOutfit.description || !vm.newOutfit.image) {
+        if (
+          !vm.newOutfit.name ||
+          !vm.newOutfit.description ||
+          !vm.newOutfit.image
+        ) {
           swal("Error!", "Please fill all fields", "error");
           return;
         }
@@ -454,8 +484,125 @@ angular
           })
           .catch(function (error) {
             console.error("Error creating outfit:", error);
-            swal("Error!", error.data?.message || "Failed to create outfit", "error");
+            swal(
+              "Error!",
+              error.data?.message || "Failed to create outfit",
+              "error"
+            );
           });
+      };
+
+      vm.toggleOutfitSelection = function (outfitId) {
+        const index = vm.selectedOutfits.indexOf(outfitId);
+        if (index === -1) {
+          vm.selectedOutfits.push(outfitId);
+        } else {
+          vm.selectedOutfits.splice(index, 1);
+        }
+      };
+
+      // Add method to open edit popup
+      vm.openEditOutfit = function (outfit) {
+        vm.editingOutfit = {
+          _id: outfit._id,
+          name: outfit.name,
+          description: outfit.description,
+          image: outfit.image,
+        };
+        vm.isEditOutfitVisible = true;
+      };
+
+      // Add method to close edit popup
+      vm.closeEditOutfit = function (event) {
+        if (event && event.target === event.currentTarget) {
+          vm.isEditOutfitVisible = false;
+          vm.editingOutfit = {
+            _id: null,
+            name: "",
+            description: "",
+            image: "",
+          };
+        } else if (!event) {
+          vm.isEditOutfitVisible = false;
+          vm.editingOutfit = {
+            _id: null,
+            name: "",
+            description: "",
+            image: "",
+          };
+        }
+      };
+
+      // Add method to submit edited outfit
+      vm.submitEditOutfit = function () {
+        if (
+          !vm.editingOutfit.name ||
+          !vm.editingOutfit.description ||
+          !vm.editingOutfit.image
+        ) {
+          swal("Error!", "Please fill all fields", "error");
+          return;
+        }
+
+        $http
+          .put(
+            `http://localhost:4000/outfits/${vm.editingOutfit._id}`,
+            vm.editingOutfit
+          )
+          .then(function (response) {
+            swal("Success!", "Outfit updated successfully", "success");
+            vm.closeEditOutfit();
+            vm.fetchUserData();
+          })
+          .catch(function (error) {
+            swal(
+              "Error!",
+              error.data?.message || "Failed to update outfit",
+              "error"
+            );
+          });
+      };
+
+      // Add method to delete selected outfits
+      vm.deleteSelectedOutfits = function () {
+        if (vm.selectedOutfits.length === 0) {
+          swal("Error!", "Please select outfits to delete", "error");
+          return;
+        }
+
+        swal({
+          title: "Are you sure?",
+          text:
+            "You are about to delete " +
+            vm.selectedOutfits.length +
+            " outfit(s). This action cannot be undone!",
+          icon: "warning",
+          buttons: ["Cancel", "Yes, delete"],
+          dangerMode: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            $http({
+              method: "DELETE",
+              url: "http://localhost:4000/outfits",
+              data: { outfitIds: vm.selectedOutfits },
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then(function (response) {
+                swal("Success!", response.data.message, "success");
+                vm.selectedOutfits = [];
+                vm.fetchUserData();
+              })
+              .catch(function (error) {
+                swal(
+                  "Error!",
+                  error.data?.message || "Failed to delete outfits",
+                  "error"
+                );
+              });
+          }
+        });
       };
 
       vm.setTab = function (tab) {
@@ -533,7 +680,8 @@ angular
       angular.element($window).on("scroll", function () {
         if (vm.fetching) return;
 
-        var scrollTop = $window.pageYOffset || $document[0].documentElement.scrollTop;
+        var scrollTop =
+          $window.pageYOffset || $document[0].documentElement.scrollTop;
         var windowHeight = $window.innerHeight;
         var bodyHeight = $document[0].documentElement.scrollHeight;
 

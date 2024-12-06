@@ -19,7 +19,7 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = ["http://127.0.0.1:5500"];
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Izinkan akses
+        callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
@@ -29,6 +29,7 @@ app.use(
 
 // Middleware untuk parsing body request
 app.use(bodyParser.json());
+app.use(express.json());
 
 // Koneksi ke MongoDB
 mongoose
@@ -60,7 +61,9 @@ app.post("/register", async (req, res) => {
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
     console.error("Error in /register route:", err);
-    res.status(500).json({ message: "Error registering user", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error registering user", error: err.message });
   }
 });
 
@@ -73,7 +76,6 @@ app.post("/login", async (req, res) => {
       return res.status(401).send({ message: "Invalid credentials" });
     }
 
-    // Bandingkan password yang dimasukkan dengan yang ada di database
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       res.status(200).send({ message: "Login successful", userId: user._id });
@@ -89,7 +91,6 @@ app.put("/user/:userId", async (req, res) => {
   try {
     const { username } = req.body;
 
-    // Check if username already exists
     const existingUser = await User.findOne({
       username: username,
       _id: { $ne: req.params.userId },
@@ -99,7 +100,11 @@ app.put("/user/:userId", async (req, res) => {
       return res.status(400).json({ message: "Username already taken" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.params.userId, { username: username }, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { username: username },
+      { new: true }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
@@ -114,7 +119,9 @@ app.put("/user/:userId", async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ message: "Error updating username", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error updating username", error: err.message });
   }
 });
 
@@ -148,7 +155,9 @@ app.get("/user/:username", async (req, res) => {
       email: user.email,
     });
   } catch (err) {
-    res.status(500).json({ message: "Error fetching user data", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching user data", error: err.message });
   }
 });
 
@@ -160,7 +169,9 @@ app.get("/outfits/user/:userId", async (req, res) => {
     });
     res.json(outfits);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching outfits", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching outfits", error: err.message });
   }
 });
 
@@ -181,24 +192,85 @@ app.post("/outfits", async (req, res) => {
     });
 
     await newOutfit.save();
-    res.status(201).json({ message: "Outfit created successfully!", outfit: newOutfit });
+    res
+      .status(201)
+      .json({ message: "Outfit created successfully!", outfit: newOutfit });
   } catch (err) {
-    res.status(500).json({ message: "Error creating outfit", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error creating outfit", error: err.message });
   }
 });
 
+// Get all outfits
 app.get("/outfits", async (req, res) => {
   try {
     const outfits = await Outfit.find()
-      .populate("user", "username") // This populates the user information
+      .populate("user", "username")
       .sort({ createdAt: -1 });
     res.json(outfits);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching outfits", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching outfits", error: err.message });
   }
 });
 
-// Jalankan server
+// Edit outfit
+app.put("/outfits/:id", async (req, res) => {
+  try {
+    const { name, description, image } = req.body;
+
+    if (!name || !description || !image) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const updatedOutfit = await Outfit.findByIdAndUpdate(
+      req.params.id,
+      { name, description, image },
+      { new: true }
+    );
+
+    if (!updatedOutfit) {
+      return res.status(404).json({ message: "Outfit not found" });
+    }
+
+    res.json({ message: "Outfit updated successfully", outfit: updatedOutfit });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Error updating outfit", error: err.message });
+  }
+});
+
+// Delete multiple outfits
+app.delete("/outfits", async (req, res) => {
+  try {
+    const { outfitIds } = req.body;
+
+    if (!outfitIds || !Array.isArray(outfitIds) || outfitIds.length === 0) {
+      return res.status(400).json({ message: "Invalid outfit IDs provided" });
+    }
+
+    const result = await Outfit.deleteMany({ _id: { $in: outfitIds } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No outfits found to delete" });
+    }
+
+    res.json({
+      message: `Successfully deleted ${result.deletedCount} outfits`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res
+      .status(500)
+      .json({ message: "Error deleting outfits", error: err.message });
+  }
+});
+
+// Start server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
