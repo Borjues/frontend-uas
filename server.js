@@ -20,7 +20,7 @@ app.use(
     origin: (origin, callback) => {
       const allowedOrigins = ["http://127.0.0.1:5500"];
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true); // Izinkan akses
+        callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
@@ -30,6 +30,7 @@ app.use(
 
 // Middleware untuk parsing body request
 app.use(bodyParser.json());
+app.use(express.json());
 
 // Koneksi ke MongoDB
 mongoose
@@ -74,7 +75,6 @@ app.post("/login", async (req, res) => {
       return res.status(401).send({ message: "Invalid credentials" });
     }
 
-    // Bandingkan password yang dimasukkan dengan yang ada di database
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       res.status(200).send({
@@ -182,7 +182,6 @@ app.put("/user/:userId", async (req, res) => {
   try {
     const { username } = req.body;
 
-    // Check if username already exists
     const existingUser = await User.findOne({
       username: username,
       _id: { $ne: req.params.userId },
@@ -280,6 +279,7 @@ app.post("/outfits", async (req, res) => {
   }
 });
 
+// Get all outfits
 app.get("/outfits", async (req, res) => {
   try {
     const outfits = await Outfit.find().populate("user", "username").populate("likes").sort({ createdAt: -1 });
