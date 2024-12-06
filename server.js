@@ -60,9 +60,7 @@ app.post("/register", async (req, res) => {
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
     console.error("Error in /register route:", err);
-    res
-      .status(500)
-      .json({ message: "Error registering user", error: err.message });
+    res.status(500).json({ message: "Error registering user", error: err.message });
   }
 });
 
@@ -101,11 +99,7 @@ app.put("/user/:userId", async (req, res) => {
       return res.status(400).json({ message: "Username already taken" });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.userId,
-      { username: username },
-      { new: true }
-    );
+    const updatedUser = await User.findByIdAndUpdate(req.params.userId, { username: username }, { new: true });
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
@@ -120,9 +114,7 @@ app.put("/user/:userId", async (req, res) => {
       },
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error updating username", error: err.message });
+    res.status(500).json({ message: "Error updating username", error: err.message });
   }
 });
 
@@ -156,9 +148,7 @@ app.get("/user/:username", async (req, res) => {
       email: user.email,
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error fetching user data", error: err.message });
+    res.status(500).json({ message: "Error fetching user data", error: err.message });
   }
 });
 
@@ -170,9 +160,7 @@ app.get("/outfits/user/:userId", async (req, res) => {
     });
     res.json(outfits);
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error fetching outfits", error: err.message });
+    res.status(500).json({ message: "Error fetching outfits", error: err.message });
   }
 });
 
@@ -193,20 +181,16 @@ app.post("/outfits", async (req, res) => {
     });
 
     await newOutfit.save();
-    res
-      .status(201)
-      .json({ message: "Outfit created successfully!", outfit: newOutfit });
+    res.status(201).json({ message: "Outfit created successfully!", outfit: newOutfit });
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: "Error creating outfit", error: err.message });
+    res.status(500).json({ message: "Error creating outfit", error: err.message });
   }
 });
 
 app.get("/outfits", async (req, res) => {
   try {
     const outfits = await Outfit.find()
-      .populate('user', 'username') // This populates the user information
+      .populate("user", "username") // This populates the user information
       .sort({ createdAt: -1 });
     res.json(outfits);
   } catch (err) {

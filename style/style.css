@@ -7,15 +7,15 @@
 }
 
 body {
-    font-family: "Poppins", sans-serif;
-    background-image: url("/image/Home.jpg");
-    background-size: cover; /* Ensures the image covers the entire area */
-    background-repeat: no-repeat; /* Prevents tiling */
-    background-attachment: fixed; /* Keeps the background fixed during scroll */
-    background-position: center; /* Centers the image */
-    color: #333;
-    line-height: 1.6;
-  }
+  font-family: "Poppins", sans-serif;
+  background-image: url("/image/Home.jpg");
+  background-size: cover; /* Ensures the image covers the entire area */
+  background-repeat: no-repeat; /* Prevents tiling */
+  background-attachment: fixed; /* Keeps the background fixed during scroll */
+  background-position: center; /* Centers the image */
+  color: #333;
+  line-height: 1.6;
+}
 
 .bx {
   font-size: 40px;
@@ -65,6 +65,18 @@ body {
 
 .profile a:hover {
   color: #ff6f61;
+}
+
+.auth-links a {
+  text-decoration: none;
+  color: black;
+}
+
+.auth-links a:hover {
+  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: #ff885b;
+  text-decoration-thickness: 2px;
 }
 
 .hamburger {
@@ -400,8 +412,6 @@ body {
   color: red; /* Color when liked */
 }
 
-
-
 /*//*||\\*/
 .outfit-card {
   display: flex;
@@ -423,9 +433,9 @@ img {
 }
 
 .tombol {
- background: none;
- text-decoration: none;
- border: none;
+  background: none;
+  text-decoration: none;
+  border: none;
 }
 
 .like-section {
@@ -439,7 +449,6 @@ img {
 .like-section .liked {
   color: red; /* Color when liked */
 }
-
 
 .comments-section {
   display: flex;
@@ -482,13 +491,10 @@ img {
   background-color: #0056b3;
 }
 
-
 .username {
   font-weight: bold;
   margin-bottom: 4px;
 }
-
-
 
 /**/
 
@@ -534,7 +540,7 @@ img {
 
 /* Main Sections Container */
 .sectionbesar {
-flex: 2;
+  flex: 2;
 }
 
 /* Like Section */

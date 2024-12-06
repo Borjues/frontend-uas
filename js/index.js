@@ -135,10 +135,11 @@ angular
         },
       ];
 
-      vm.fetchOutfits = function() {
-        $http.get('http://localhost:4000/outfits')
-          .then(function(response) {
-            vm.userOutfits = response.data.map(function(outfit) {
+      vm.fetchOutfits = function () {
+        $http
+          .get("http://localhost:4000/outfits")
+          .then(function (response) {
+            vm.userOutfits = response.data.map(function (outfit) {
               return {
                 url: outfit.image,
                 outfitName: outfit.name, // Add outfit name
@@ -147,12 +148,12 @@ angular
                 comments: [],
                 newComment: "",
                 likeCount: 0,
-                liked: false
+                liked: false,
               };
             });
           })
-          .catch(function(error) {
-            console.error('Error fetching outfits:', error);
+          .catch(function (error) {
+            console.error("Error fetching outfits:", error);
           });
       };
 
@@ -191,8 +192,7 @@ angular
       };
 
       vm.prevSlide = function () {
-        vm.currentSlide =
-          (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
+        vm.currentSlide = (vm.currentSlide - 1 + vm.slides.length) % vm.slides.length;
       };
 
       vm.setCurrentSlide = function (index) {
@@ -244,12 +244,10 @@ angular
               };
               storeUserSession(userSession);
 
-              swal("Success!", "Login successful.", "success").then(
-                function () {
-                  $location.path("/");
-                  $scope.$apply();
-                }
-              );
+              swal("Success!", "Login successful.", "success").then(function () {
+                $location.path("/");
+                $scope.$apply();
+              });
             })
             .catch(function (error) {
               swal("Oops!", "Wrong username or password.", "error");
@@ -278,19 +276,13 @@ angular
       vm.submitForm = function () {
         AuthService.register(vm.user.name, vm.user.email, vm.user.password)
           .then(function (response) {
-            swal("Success!", response.data.message, "success").then(
-              function () {
-                $location.path("/login");
-                $scope.$apply();
-              }
-            );
+            swal("Success!", response.data.message, "success").then(function () {
+              $location.path("/login");
+              $scope.$apply();
+            });
           })
           .catch(function (error) {
-            swal(
-              "Error!",
-              error.data.message || "An unknown error occurred",
-              "error"
-            );
+            swal("Error!", error.data.message || "An unknown error occurred", "error");
           });
       };
     },
@@ -362,11 +354,7 @@ angular
             vm.closeEditUsername();
           })
           .catch(function (error) {
-            swal(
-              "Error!",
-              error.data.message || "Failed to update username",
-              "error"
-            );
+            swal("Error!", error.data.message || "Failed to update username", "error");
           });
       };
 
@@ -395,9 +383,7 @@ angular
 
       // Function to fetch user data and outfits
       vm.fetchUserData = function () {
-        const currentUsername = JSON.parse(
-          localStorage.getItem("user")
-        )?.username;
+        const currentUsername = JSON.parse(localStorage.getItem("user"))?.username;
         if (!currentUsername) return;
 
         // Get user data
@@ -405,9 +391,7 @@ angular
           .get(`http://localhost:4000/user/${currentUsername}`)
           .then(function (response) {
             vm.user = response.data;
-            return $http.get(
-              `http://localhost:4000/outfits/user/${vm.user._id}`
-            );
+            return $http.get(`http://localhost:4000/outfits/user/${vm.user._id}`);
           })
           .then(function (response) {
             vm.userOutfits = response.data;
@@ -449,11 +433,7 @@ angular
           return;
         }
 
-        if (
-          !vm.newOutfit.name ||
-          !vm.newOutfit.description ||
-          !vm.newOutfit.image
-        ) {
+        if (!vm.newOutfit.name || !vm.newOutfit.description || !vm.newOutfit.image) {
           swal("Error!", "Please fill all fields", "error");
           return;
         }
@@ -474,11 +454,7 @@ angular
           })
           .catch(function (error) {
             console.error("Error creating outfit:", error);
-            swal(
-              "Error!",
-              error.data?.message || "Failed to create outfit",
-              "error"
-            );
+            swal("Error!", error.data?.message || "Failed to create outfit", "error");
           });
       };
 
@@ -557,8 +533,7 @@ angular
       angular.element($window).on("scroll", function () {
         if (vm.fetching) return;
 
-        var scrollTop =
-          $window.pageYOffset || $document[0].documentElement.scrollTop;
+        var scrollTop = $window.pageYOffset || $document[0].documentElement.scrollTop;
         var windowHeight = $window.innerHeight;
         var bodyHeight = $document[0].documentElement.scrollHeight;
 
