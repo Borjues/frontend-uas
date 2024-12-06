@@ -39,7 +39,7 @@
 <!-- Modal -->
 <div id="imageModal" class="modal" ng-show="home.modalOpen" ng-click="home.closeModal()">
   <!-- Overlay -->
-  <div class="modal-content" ng-click="$event.stopPropagation()">
+  <div class="modal-overlay" ng-click="$event.stopPropagation()">
     <!-- Selected Image -->
     <img ng-src="{{home.selectedOutfit.url}}" alt="{{home.selectedOutfit.alt}}" />
 
