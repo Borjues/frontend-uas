@@ -347,6 +347,52 @@ app.get("/outfits/:outfitId/likes", async (req, res) => {
   }
 });
 
+// Edit outfit
+app.put("/outfits/:id", async (req, res) => {
+  try {
+    const { name, description, image } = req.body;
+
+    if (!name || !description || !image) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const updatedOutfit = await Outfit.findByIdAndUpdate(req.params.id, { name, description, image }, { new: true });
+
+    if (!updatedOutfit) {
+      return res.status(404).json({ message: "Outfit not found" });
+    }
+
+    res.json({ message: "Outfit updated successfully", outfit: updatedOutfit });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating outfit", error: err.message });
+  }
+});
+
+// Delete multiple outfits
+app.delete("/outfits", async (req, res) => {
+  try {
+    const { outfitIds } = req.body;
+
+    if (!outfitIds || !Array.isArray(outfitIds) || outfitIds.length === 0) {
+      return res.status(400).json({ message: "Invalid outfit IDs provided" });
+    }
+
+    const result = await Outfit.deleteMany({ _id: { $in: outfitIds } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No outfits found to delete" });
+    }
+
+    res.json({
+      message: "Successfully deleted ${result.deletedCount} outfits",
+      deletedCount: result.deletedCount,
+    });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ message: "Error deleting outfits", error: err.message });
+  }
+});
+
 // Jalankan server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
