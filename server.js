@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const User = require("./models/User");
 const Outfit = require("./models/Outfit");
+const Comment = require("./models/Comment");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -76,12 +77,104 @@ app.post("/login", async (req, res) => {
     // Bandingkan password yang dimasukkan dengan yang ada di database
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      res.status(200).send({ message: "Login successful", userId: user._id });
+      res.status(200).send({
+        message: "Login successful",
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+        },
+      });
     } else {
       res.status(401).send({ message: "Invalid credentials" });
     }
   } catch (error) {
     res.status(500).send({ message: "Server error", error });
+  }
+});
+
+// add comment
+app.post("/comments", async (req, res) => {
+  try {
+    const { outfitId, userId, text } = req.body;
+
+    // Validasi input
+    if (!outfitId || !userId || !text) {
+      return res.status(400).json({
+        message: "Missing required fields",
+        received: { outfitId, userId, text },
+      });
+    }
+
+    const newComment = new Comment({
+      outfitId,
+      userId,
+      text,
+    });
+
+    await newComment.save();
+
+    // Populate user info sebelum mengirim response
+    const populatedComment = await Comment.findById(newComment._id).populate("userId", "username");
+
+    // Update outfit dengan referensi comment baru
+    await Outfit.findByIdAndUpdate(outfitId, { $push: { comments: newComment._id } });
+
+    res.status(201).json({
+      message: "Comment added successfully",
+      comment: populatedComment,
+    });
+  } catch (err) {
+    console.error("Error in POST /comments:", err);
+    res.status(500).json({ message: "Error creating comment", error: err.message });
+  }
+});
+
+// Get comments
+app.get("/comments/:outfitId", async (req, res) => {
+  try {
+    if (!req.params.outfitId || req.params.outfitId === "undefined") {
+      return res.status(400).json({ message: "Invalid outfit ID" });
+    }
+
+    const comments = await Comment.find({ outfitId: req.params.outfitId }).populate("userId", "username").sort({ createdAt: -1 });
+
+    res.json(comments);
+  } catch (err) {
+    console.error("Error in GET /comments/:outfitId:", err);
+    res.status(500).json({ message: "Error fetching comments", error: err.message });
+  }
+});
+
+// Update comment
+app.put("/comments/:commentId", async (req, res) => {
+  try {
+    const { text } = req.body;
+    const updatedComment = await Comment.findByIdAndUpdate(req.params.commentId, { text }, { new: true }).populate("userId", "username");
+
+    if (!updatedComment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    res.json({
+      message: "Comment updated successfully",
+      comment: updatedComment,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating comment", error: err.message });
+  }
+});
+
+// Delete comment
+app.delete("/comments/:commentId", async (req, res) => {
+  try {
+    const comment = await Comment.findByIdAndDelete(req.params.commentId);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+    res.json({ message: "Comment deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting comment", error: err.message });
   }
 });
 
@@ -189,12 +282,68 @@ app.post("/outfits", async (req, res) => {
 
 app.get("/outfits", async (req, res) => {
   try {
-    const outfits = await Outfit.find()
-      .populate("user", "username") // This populates the user information
-      .sort({ createdAt: -1 });
+    const outfits = await Outfit.find().populate("user", "username").populate("likes").sort({ createdAt: -1 });
     res.json(outfits);
   } catch (err) {
     res.status(500).json({ message: "Error fetching outfits", error: err.message });
+  }
+});
+
+app.post("/outfits/:outfitId/like", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const { outfitId } = req.params;
+
+    if (!userId || !outfitId) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const outfit = await Outfit.findById(outfitId);
+    if (!outfit) {
+      return res.status(404).json({ message: "Outfit not found" });
+    }
+
+    const userLikedIndex = outfit.likes.indexOf(userId);
+    let liked;
+
+    if (userLikedIndex === -1) {
+      // User hasn't liked the outfit yet, so add the like
+      outfit.likes.push(userId);
+      liked = true;
+    } else {
+      // User already liked the outfit, so remove the like
+      outfit.likes.splice(userLikedIndex, 1);
+      liked = false;
+    }
+
+    await outfit.save();
+
+    res.json({
+      message: liked ? "Like added successfully" : "Like removed successfully",
+      liked: liked,
+      likeCount: outfit.likes.length,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error toggling like", error: err.message });
+  }
+});
+
+app.get("/outfits/:outfitId/likes", async (req, res) => {
+  try {
+    const { outfitId } = req.params;
+    const { userId } = req.query;
+
+    const outfit = await Outfit.findById(outfitId);
+    if (!outfit) {
+      return res.status(404).json({ message: "Outfit not found" });
+    }
+
+    res.json({
+      likeCount: outfit.likes.length,
+      liked: userId ? outfit.likes.includes(userId) : false,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching likes", error: err.message });
   }
 });
 

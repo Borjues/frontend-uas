@@ -73,7 +73,8 @@ angular
     "$scope",
     "$interval",
     "$http",
-    function ($scope, $interval, $http) {
+    "AuthService",
+    function ($scope, $interval, $http, AuthService) {
       var vm = this;
 
       // Initialize variables
@@ -141,15 +142,20 @@ angular
           .then(function (response) {
             vm.userOutfits = response.data.map(function (outfit) {
               return {
+                _id: outfit._id,
                 url: outfit.image,
-                outfitName: outfit.name, // Add outfit name
+                outfitName: outfit.name,
                 description: outfit.description,
                 username: outfit.user.username,
                 comments: [],
                 newComment: "",
-                likeCount: 0,
-                liked: false,
+                likeCount: 0, // Ini di-reset ke 0
+                liked: false, // Ini di-reset ke false
               };
+            });
+
+            vm.userOutfits.forEach(function (outfit) {
+              vm.fetchLikes(outfit);
             });
           })
           .catch(function (error) {
@@ -162,8 +168,12 @@ angular
 
       // Open modal
       vm.openImage = function (outfit) {
+        console.log("Opening outfit:", outfit); // Debugging
         vm.selectedOutfit = outfit;
         vm.modalOpen = true;
+        if (outfit._id) {
+          vm.fetchComments(outfit);
+        }
       };
 
       // Close modal
@@ -178,12 +188,149 @@ angular
         outfit.likeCount += outfit.liked ? 1 : -1; // Update the like count
       };
 
-      // Add comment for a specific outfit
-      vm.addComment = function (outfit) {
-        if (outfit.newComment.trim() !== "") {
-          outfit.comments.push({ user: "User", text: outfit.newComment }); // Add comment to the specific outfit
-          outfit.newComment = ""; // Clear the input field
+      vm.fetchComments = function (outfit) {
+        if (!outfit || !outfit._id) {
+          console.error("No outfit ID available");
+          return;
         }
+
+        $http
+          .get(`http://localhost:4000/comments/${outfit._id}`)
+          .then(function (response) {
+            outfit.comments = response.data;
+          })
+          .catch(function (error) {
+            console.error("Error fetching comments:", error);
+          });
+      };
+
+      vm.addComment = function (outfit) {
+        if (!AuthService.isLoggedIn()) {
+          swal("Error!", "Please login to comment", "error");
+          return;
+        }
+
+        if (!outfit.newComment || outfit.newComment.trim() === "") {
+          return;
+        }
+
+        const userData = JSON.parse(localStorage.getItem("user"));
+
+        if (!userData || !userData._id) {
+          swal("Error!", "User session not found", "error");
+          return;
+        }
+
+        const commentData = {
+          outfitId: outfit._id,
+          userId: userData._id,
+          text: outfit.newComment.trim(),
+        };
+
+        $http
+          .post("http://localhost:4000/comments", commentData)
+          .then(function (response) {
+            outfit.comments.unshift(response.data.comment);
+            outfit.newComment = "";
+          })
+          .catch(function (error) {
+            console.error("Error adding comment:", error);
+            swal("Error!", "Failed to add comment", "error");
+          });
+      };
+
+      vm.updateComment = function (outfit, comment) {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (comment.userId._id !== userData._id) {
+          swal("Error!", "You can only edit your own comments", "error");
+          return;
+        }
+
+        const newText = prompt("Edit your comment:", comment.text);
+        if (newText === null || newText.trim() === "") return;
+
+        $http
+          .put(`http://localhost:4000/comments/${comment._id}`, { text: newText })
+          .then(function (response) {
+            const index = outfit.comments.findIndex((c) => c._id === comment._id);
+            if (index !== -1) {
+              outfit.comments[index] = response.data.comment;
+            }
+          })
+          .catch(function (error) {
+            swal("Error!", "Failed to update comment", "error");
+          });
+      };
+
+      vm.deleteComment = function (outfit, comment) {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (comment.userId._id !== userData._id) {
+          swal("Error!", "You can only delete your own comments", "error");
+          return;
+        }
+
+        swal({
+          title: "Are you sure?",
+          text: "Once deleted, you will not be able to recover this comment!",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            $http
+              .delete(`http://localhost:4000/comments/${comment._id}`)
+              .then(function () {
+                const index = outfit.comments.findIndex((c) => c._id === comment._id);
+                if (index !== -1) {
+                  outfit.comments.splice(index, 1);
+                }
+              })
+              .catch(function (error) {
+                swal("Error!", "Failed to delete comment", "error");
+              });
+          }
+        });
+      };
+
+      // fetch likes
+      vm.fetchLikes = function (outfit) {
+        if (!AuthService.isLoggedIn()) return;
+
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (!outfit._id || !userData) return;
+
+        $http
+          .get(`http://localhost:4000/outfits/${outfit._id}/likes?userId=${userData._id}`)
+          .then(function (response) {
+            outfit.likeCount = response.data.likeCount;
+            outfit.liked = response.data.liked;
+          })
+          .catch(function (error) {
+            console.error("Error fetching likes:", error);
+          });
+      };
+
+      // Update the toggleLike function
+      vm.toggleLike = function (outfit) {
+        if (!AuthService.isLoggedIn()) {
+          swal("Error!", "Please login to like outfits", "error");
+          return;
+        }
+
+        const userData = JSON.parse(localStorage.getItem("user"));
+
+        $http
+          .post(`http://localhost:4000/outfits/${outfit._id}/like`, {
+            userId: userData._id,
+          })
+          .then(function (response) {
+            outfit.liked = response.data.liked;
+            outfit.likeCount = response.data.likeCount;
+          })
+          .catch(function (error) {
+            console.error("Error toggling like:", error);
+            swal("Error!", "Failed to update like", "error");
+          });
       };
 
       // Functions for slider navigation
@@ -228,7 +375,6 @@ angular
         password: "",
       };
 
-      // Function to store user data in localStorage
       function storeUserSession(userData) {
         localStorage.setItem("user", JSON.stringify(userData));
       }
@@ -237,11 +383,13 @@ angular
         if (vm.user.username && vm.user.password) {
           AuthService.login(vm.user.username, vm.user.password)
             .then(function (response) {
-              // Store user session data
               const userSession = {
-                username: vm.user.username,
+                _id: response.data.user._id,
+                username: response.data.user.username,
+                email: response.data.user.email,
                 loginTime: new Date().toISOString(),
               };
+
               storeUserSession(userSession);
 
               swal("Success!", "Login successful.", "success").then(function () {
@@ -250,6 +398,7 @@ angular
               });
             })
             .catch(function (error) {
+              console.error("Login error:", error); // Debugging
               swal("Oops!", "Wrong username or password.", "error");
             });
         } else {

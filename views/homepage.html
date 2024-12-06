@@ -62,7 +62,7 @@
             <div>
               <p class="username">{{home.selectedOutfit.username}}</p>
               <p class="caption">{{home.selectedOutfit.outfitName}}</p>
-              <p>{{home.selectedOutfit.description}}</p>
+              <p class="description">{{home.selectedOutfit.description}}</p>
             </div>
           </div>
 
@@ -73,16 +73,23 @@
               <span>{{home.selectedOutfit.likeCount}} likes</span>
             </div>
 
-            <h4>Comments</h4>
+            <h4 class="comments-top-text">Comments</h4>
             <div class="comments-section">
               <div class="comments-container">
-                <div class="comment" ng-repeat="comment in home.selectedOutfit.comments"><strong>{{comment.user}}:</strong> {{comment.text}}</div>
+                <div class="comment" ng-repeat="comment in home.selectedOutfit.comments">
+                  <div class="comment-header">
+                    <strong>{{comment.userId.username}}</strong>
+                    <div class="comment-actions" ng-if="comment.userId._id === home.currentUser._id">
+                      <button ng-click="home.updateComment(home.selectedOutfit, comment)" class="edit-btn">Edit</button>
+                      <button ng-click="home.deleteComment(home.selectedOutfit, comment)" class="delete-btn">Delete</button>
+                    </div>
+                  </div>
+                  <div class="comment-text">{{comment.text}}</div>
+                </div>
               </div>
-            </div>
 
-            <div class="comment-input-section">
-              <div class="comment-input">
-                <input type="text" ng-model="home.selectedOutfit.newComment" placeholder="Add a comment..." />
+              <div class="comment-input-section">
+                <input type="text" ng-model="home.selectedOutfit.newComment" placeholder="Add a comment..." ng-keypress="$event.keyCode === 13 && home.addComment(home.selectedOutfit)" />
                 <button ng-click="home.addComment(home.selectedOutfit)">Post</button>
               </div>
             </div>
