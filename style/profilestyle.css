@@ -398,12 +398,25 @@ footer {
   }
 
   .profile-tabs button {
-    padding: 10px 16px;
+    padding: 8px 12px;
     font-size: 14px;
   }
 
   .popup-content {
     width: 90%;
     padding: 20px;
+  }
+
+  .profile-header {
+    padding: 20px 0;
+  }
+
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .outfit-grid {
+    gap: 10px;
   }
 }
