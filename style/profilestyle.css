@@ -91,29 +91,22 @@ footer {
 .profile-tabs {
   display: flex;
   justify-content: center;
-  gap: 40px;
-  margin: 30px 0;
+  margin-top: 0;
   position: relative;
 }
 
 .profile-tabs button {
   padding: 12px 24px;
   font-size: 16px;
-  color: #555;
+  color: #ff885b;
   background: none;
   border: none;
   cursor: pointer;
   position: relative;
   border-radius: 8px;
-  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-.profile-tabs button.active {
-  color: #ff885b;
-  background-color: transparent;
-}
-
-.profile-tabs button.active::after {
+.profile-tabs button::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -124,23 +117,16 @@ footer {
   background-color: #ff885b;
 }
 
-.profile-tabs button:hover:not(.active) {
-  background-color: #e6e6e6;
-  border-radius: 8px;
-}
-
 .tab-content {
   text-align: center;
 }
 
-.created-outfit,
-.saved-outfits {
+.created-outfit {
   text-align: center;
   margin-top: 20px;
 }
 
-.created-outfit p,
-.saved-outfits p {
+.created-outfit p {
   font-size: 16px;
   color: #666;
   margin-bottom: 20px;
@@ -394,12 +380,32 @@ footer {
   }
 
   .profile-tabs {
-    gap: 20px;
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+    position: relative;
   }
 
   .profile-tabs button {
-    padding: 8px 12px;
-    font-size: 14px;
+    padding: 12px 24px;
+    font-size: 16px;
+    color: #ff885b;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    border-radius: 8px;
+  }
+
+  .profile-tabs button::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 2px;
+    background-color: #ff885b;
   }
 
   .popup-content {

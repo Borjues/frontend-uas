@@ -250,9 +250,13 @@ angular
         if (newText === null || newText.trim() === "") return;
 
         $http
-          .put(`http://localhost:4000/comments/${comment._id}`, { text: newText })
+          .put(`http://localhost:4000/comments/${comment._id}`, {
+            text: newText,
+          })
           .then(function (response) {
-            const index = outfit.comments.findIndex((c) => c._id === comment._id);
+            const index = outfit.comments.findIndex(
+              (c) => c._id === comment._id
+            );
             if (index !== -1) {
               outfit.comments[index] = response.data.comment;
             }
@@ -280,7 +284,9 @@ angular
             $http
               .delete(`http://localhost:4000/comments/${comment._id}`)
               .then(function () {
-                const index = outfit.comments.findIndex((c) => c._id === comment._id);
+                const index = outfit.comments.findIndex(
+                  (c) => c._id === comment._id
+                );
                 if (index !== -1) {
                   outfit.comments.splice(index, 1);
                 }
@@ -300,7 +306,9 @@ angular
         if (!outfit._id || !userData) return;
 
         $http
-          .get(`http://localhost:4000/outfits/${outfit._id}/likes?userId=${userData._id}`)
+          .get(
+            `http://localhost:4000/outfits/${outfit._id}/likes?userId=${userData._id}`
+          )
           .then(function (response) {
             outfit.likeCount = response.data.likeCount;
             outfit.liked = response.data.liked;
@@ -447,6 +455,7 @@ angular
   ])
 
   // Profile Controller
+  // Profile Controller
   .controller("ProfileController", [
     "$location",
     "$http",
@@ -454,7 +463,7 @@ angular
     function ($location, $http, AuthService) {
       var vm = this;
 
-      vm.activeTab = "created";
+      // Remove activeTab since we no longer need it
       vm.isEditUsernameVisible = false;
       vm.newUsername = "";
       vm.userOutfits = [];
@@ -476,7 +485,6 @@ angular
 
       vm.logout = function () {
         localStorage.removeItem("user");
-
         $location.path("/login");
       };
 
@@ -629,7 +637,7 @@ angular
           .then(function (response) {
             swal("Success!", "Outfit created successfully", "success");
             vm.closePopup();
-            vm.fetchUserData(); // Refresh semua data
+            vm.fetchUserData(); // Refresh all data
           })
           .catch(function (error) {
             console.error("Error creating outfit:", error);
@@ -650,7 +658,6 @@ angular
         }
       };
 
-      // Add method to open edit popup
       vm.openEditOutfit = function (outfit) {
         vm.editingOutfit = {
           _id: outfit._id,
@@ -661,7 +668,6 @@ angular
         vm.isEditOutfitVisible = true;
       };
 
-      // Add method to close edit popup
       vm.closeEditOutfit = function (event) {
         if (event && event.target === event.currentTarget) {
           vm.isEditOutfitVisible = false;
@@ -682,7 +688,6 @@ angular
         }
       };
 
-      // Add method to submit edited outfit
       vm.submitEditOutfit = function () {
         if (
           !vm.editingOutfit.name ||
@@ -712,7 +717,6 @@ angular
           });
       };
 
-      // Add method to delete selected outfits
       vm.deleteSelectedOutfits = function () {
         if (vm.selectedOutfits.length === 0) {
           swal("Error!", "Please select outfits to delete", "error");
@@ -752,10 +756,6 @@ angular
               });
           }
         });
-      };
-
-      vm.setTab = function (tab) {
-        vm.activeTab = tab;
       };
 
       vm.goBack = function () {

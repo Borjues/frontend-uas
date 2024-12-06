@@ -11,65 +11,46 @@
       Edit Profile
     </button>
   </div>
+</div>
 
-  <div class="profile-tabs">
+<div class="profile-tabs">
+  <button>Created</button>
+</div>
+
+<div class="created-outfit">
+  <button class="create-btn" ng-click="profile.openCreatePopup()">
+    Create Outfit
+  </button>
+
+  <div class="bulk-actions" ng-if="profile.selectedOutfits.length > 0">
     <button
-      ng-class="{active: profile.activeTab === 'created'}"
-      ng-click="profile.setTab('created')"
+      class="delete-selected-btn"
+      ng-click="profile.deleteSelectedOutfits()"
     >
-      Created
-    </button>
-    <button
-      ng-class="{active: profile.activeTab === 'saved'}"
-      ng-click="profile.setTab('saved')"
-    >
-      Saved
+      Delete Selected ({{profile.selectedOutfits.length}})
     </button>
   </div>
 
-  <div class="created-outfit" ng-show="profile.activeTab === 'created'">
-    <button class="create-btn" ng-click="profile.openCreatePopup()">
-      Create Outfit
-    </button>
-
-    <!-- Bulk Actions -->
-    <div class="bulk-actions" ng-if="profile.selectedOutfits.length > 0">
-      <button
-        class="delete-selected-btn"
-        ng-click="profile.deleteSelectedOutfits()"
-      >
-        Delete Selected ({{profile.selectedOutfits.length}})
+  <div class="outfit-grid" ng-if="profile.userOutfits.length > 0">
+    <div class="outfit-card" ng-repeat="outfit in profile.userOutfits">
+      <div class="outfit-selection">
+        <input
+          type="checkbox"
+          ng-click="profile.toggleOutfitSelection(outfit._id)"
+        />
+      </div>
+      <img ng-src="{{outfit.image}}" alt="{{outfit.name}}" />
+      <h3>{{outfit.name}}</h3>
+      <p>{{outfit.description}}</p>
+      <button class="edit-btn" ng-click="profile.openEditOutfit(outfit)">
+        Edit
       </button>
     </div>
-
-    <!-- Outfit Grid -->
-    <div class="outfit-grid" ng-if="profile.userOutfits.length > 0">
-      <div class="outfit-card" ng-repeat="outfit in profile.userOutfits">
-        <div class="outfit-selection">
-          <input
-            type="checkbox"
-            ng-checked="profile.selectedOutfits.indexOf(outfit._id) !== -1"
-            ng-click="profile.toggleOutfitSelection(outfit._id)"
-          />
-        </div>
-        <img ng-src="{{outfit.image}}" alt="{{outfit.name}}" />
-        <h3>{{outfit.name}}</h3>
-        <p>{{outfit.description}}</p>
-        <button class="edit-btn" ng-click="profile.openEditOutfit(outfit)">
-          Edit
-        </button>
-      </div>
-    </div>
-
-    <p ng-if="!profile.userOutfits.length">
-      Nothing to show... yet! Pins you create will live here.
-    </p>
   </div>
 
-  <div class="saved-outfits" ng-show="profile.activeTab === 'saved'">
-    <p>You haven't saved any Pins yet.</p>
-    <button class="find-ideas-btn">Find Ideas</button>
-  </div>
+  <p ng-if="!profile.userOutfits.length">
+    Nothing to show... yet! Pins you create will live here.
+  </p>
 </div>
 
 <!-- Edit Username Popup -->
@@ -80,12 +61,15 @@
 >
   <div class="popup-content edit-username">
     <h2>Edit Profile</h2>
-
     <div class="form-group">
-      <label>New Username</label>
-      <input type="text" ng-model="profile.newUsername" />
+      <label for="newUsername">New Username</label>
+      <input
+        type="text"
+        id="newUsername"
+        ng-model="profile.newUsername"
+        placeholder="Enter new username"
+      />
     </div>
-
     <div class="popup-actions">
       <button class="submit-btn" ng-click="profile.updateUsername()">
         Save Changes
@@ -94,7 +78,6 @@
         Cancel
       </button>
     </div>
-
     <div class="delete-section">
       <hr class="divider" />
       <button class="delete-btn" ng-click="profile.deleteAccount()">
@@ -112,33 +95,32 @@
 >
   <div class="popup-content">
     <h2>Create New Outfit</h2>
-
     <div class="form-group">
-      <label>Outfit Name</label>
+      <label for="outfitName">Outfit Name</label>
       <input
         type="text"
+        id="outfitName"
         ng-model="profile.newOutfit.name"
         placeholder="Enter outfit name"
       />
     </div>
-
     <div class="form-group">
-      <label>Description</label>
+      <label for="outfitDescription">Description</label>
       <textarea
+        id="outfitDescription"
         ng-model="profile.newOutfit.description"
-        placeholder="Enter description"
+        placeholder="Enter outfit description"
       ></textarea>
     </div>
-
     <div class="form-group">
-      <label>Image URL</label>
+      <label for="outfitImage">Image URL</label>
       <input
         type="text"
+        id="outfitImage"
         ng-model="profile.newOutfit.image"
         placeholder="Enter image URL"
       />
     </div>
-
     <div class="popup-actions">
       <button class="submit-btn" ng-click="profile.submitOutfit()">Save</button>
       <button class="cancel-btn" ng-click="profile.closePopup()">Cancel</button>
@@ -154,33 +136,32 @@
 >
   <div class="popup-content">
     <h2>Edit Outfit</h2>
-
     <div class="form-group">
-      <label>Outfit Name</label>
+      <label for="editOutfitName">Outfit Name</label>
       <input
         type="text"
+        id="editOutfitName"
         ng-model="profile.editingOutfit.name"
         placeholder="Enter outfit name"
       />
     </div>
-
     <div class="form-group">
-      <label>Description</label>
+      <label for="editOutfitDescription">Description</label>
       <textarea
+        id="editOutfitDescription"
         ng-model="profile.editingOutfit.description"
-        placeholder="Enter description"
+        placeholder="Enter outfit description"
       ></textarea>
     </div>
-
     <div class="form-group">
-      <label>Image URL</label>
+      <label for="editOutfitImage">Image URL</label>
       <input
         type="text"
+        id="editOutfitImage"
         ng-model="profile.editingOutfit.image"
         placeholder="Enter image URL"
       />
     </div>
-
     <div class="popup-actions">
       <button class="submit-btn" ng-click="profile.submitEditOutfit()">
         Save Changes
